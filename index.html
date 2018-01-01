@@ -11,7 +11,7 @@
 <meta http-equiv="Expires" content="0">
 <link href="main.css" rel="stylesheet">
 <script type='application/javascript' src='main.js'></script>
-<script src="https://cdn.jsdelivr.net/npm/webmidi"></script>
+<script src='https://cwilso.github.com/WebMIDIAPIShim/lib/WebMIDIAPI.js'></script>
 <script type='application/javascript' src='input.js'></script>
 </head>
 <body onload="onLoaded();">
@@ -166,6 +166,18 @@
 </div>
 </div>
 </div>
+
+
+	<p>
+		MIDI Input:
+		<select id=midiIn onchange='changeMidiIn();'>
+			<option value="">Not connected</option>
+		</select>
+		MIDI Output:
+		<select id=midiOut onchange='changeMidiOut();'>
+			<option value="">Not connected</option>
+		</select>
+	</p>
 
 <script>
 </script>

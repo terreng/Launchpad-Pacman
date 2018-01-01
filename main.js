@@ -4,7 +4,7 @@ var startgameboard = [
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,0,
 0,1,0,0,0,0,1,0,0,0,0,0,1,0,0,1,0,0,0,0,0,1,0,0,0,0,1,0,
-0,2,0,0,0,0,1,0,0,0,0,0,1,0,0,1,0,0,0,0,0,1,0,0,0,0,2,0,
+0,2,0,4,4,0,1,0,4,4,4,0,1,0,0,1,0,4,4,4,0,1,0,4,4,0,2,0,
 0,1,0,0,0,0,1,0,0,0,0,0,1,0,0,1,0,0,0,0,0,1,0,0,0,0,1,0,
 0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,
 0,1,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,1,0,
@@ -32,6 +32,16 @@ var startgameboard = [
 0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,
 0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+]
+var lpadconvert = [
+81,82,83,84,85,86,87,88,
+71,72,73,74,75,76,77,78,
+61,62,63,64,65,66,67,68,
+51,52,53,54,55,56,57,58,
+41,42,43,44,45,46,47,48,
+31,32,33,34,35,36,37,38,
+21,22,23,24,25,26,27,28,
+11,12,13,14,15,16,17,18,
 ]
 var playerpos = 0;
 var gameboard = [];
@@ -70,9 +80,13 @@ points = 1;
 }
 
 function onLoaded() {
+setTimeout(function() {
+
 
 initialize();
 drawFrame();
+
+}, 300);
 
 }
 
@@ -171,24 +185,31 @@ for (f = 0; f < gameboard.length; f++) {
 current += 1;
 if (gameboard[current] == 0) {
 color = "blue"
+ccode = 50;
 }
 if (gameboard[current] == 3) {
 color = "gray"
+ccode = 1;
 }
 if (gameboard[current] == 4) {
 color = "black"
+ccode = 0;
 }
 if (gameboard[current] == 1) {
 color = "lightgray"
+ccode = 3;
 }
 if (gameboard[current] == 2) {
 color = "white"
+ccode = 119;
 }
 if (gameboard[current] == 5) {
 color = "yellow"
+ccode = 97;
 }
 if (gameboard[current] == 9) {
 color = "pink"
+ccode = 56;
 }
 gid("b_"+current).style.backgroundColor = color;
 }
@@ -238,11 +259,17 @@ var disfromleft = 0;
 var blankleft = 0;
 var blankright = 0;
 var disfromright = 0;
+var disfromtop = 0;
+var blankbottom = 0;
+var disfrombottom = 0;
 disfromleft = Math.round(((playerpos/28)-Math.floor(playerpos/28))*28);
 blankleft = -disfromleft+3
 disfromright = 27-Math.round(((playerpos/28)-Math.floor(playerpos/28))*28);
-console.log(disfromright);
 blankright = -disfromright+3;
+disfromtop = Math.floor(playerpos/28);
+blanktop = -disfromtop+3
+disfrombottom = 30-Math.floor(playerpos/28);
+blankbottom = -disfrombottom+3
 
 for (a = 0; a < 8; a++) {
 for (i = 0; i < 8; i++) {
@@ -265,33 +292,53 @@ count += 1;
 
 if (ldisplay[count] == 0) {
 color = "blue"
+ccode = 46;
 }
 if (ldisplay[count] == 3) {
 color = "gray"
+ccode = 0;
 }
 if (ldisplay[count] == 4) {
 color = "black"
+ccode = 0;
 }
 if (ldisplay[count] == 1) {
 color = "lightgray"
+ccode = 71;
 }
 if (ldisplay[count] == 2) {
 color = "white"
+ccode = 119;
 }
 if (ldisplay[count] == 5) {
 color = "yellow"
+ccode = 13;
 }
 if (ldisplay[count] == 9) {
 color = "pink"
+ccode = 56;
 }
 
 if (x-blankleft < 1) {
 color = "black";
+ccode = 0;
 }
 if (x+blankright > 7) {
 color = "black";
+ccode = 0;
+}
+if (y-blanktop < 1) {
+color = "black";
+ccode = 0;
+}
+if (y+blankbottom > 7) {
+color = "black";
+ccode = 0;
 }
 
+if (midiOut) {
+midiOut.send( [0x90, Number(String(9-y)+String(x)), true ? (ccode) : 0x00])
+}
 gid(y+"_"+x).style.backgroundColor = color;
 
 }
