@@ -183,34 +183,7 @@ function drawFrame() {
 var current = -1;
 for (f = 0; f < gameboard.length; f++) {
 current += 1;
-if (gameboard[current] == 0) {
-color = "blue"
-ccode = 50;
-}
-if (gameboard[current] == 3) {
-color = "gray"
-ccode = 1;
-}
-if (gameboard[current] == 4) {
-color = "black"
-ccode = 0;
-}
-if (gameboard[current] == 1) {
-color = "lightgray"
-ccode = 3;
-}
-if (gameboard[current] == 2) {
-color = "white"
-ccode = 119;
-}
-if (gameboard[current] == 5) {
-color = "yellow"
-ccode = 97;
-}
-if (gameboard[current] == 9) {
-color = "pink"
-ccode = 56;
-}
+color = toColor(gameboard[current]);
 gid("b_"+current).style.backgroundColor = color;
 }
 
@@ -290,34 +263,8 @@ x += 1;
 
 count += 1;
 
-if (ldisplay[count] == 0) {
-color = "blue"
-ccode = 46;
-}
-if (ldisplay[count] == 3) {
-color = "gray"
-ccode = 0;
-}
-if (ldisplay[count] == 4) {
-color = "black"
-ccode = 0;
-}
-if (ldisplay[count] == 1) {
-color = "lightgray"
-ccode = 71;
-}
-if (ldisplay[count] == 2) {
-color = "white"
-ccode = 119;
-}
-if (ldisplay[count] == 5) {
-color = "yellow"
-ccode = 13;
-}
-if (ldisplay[count] == 9) {
-color = "pink"
-ccode = 56;
-}
+color = toColor(ldisplay[count]);
+ccode = toColorCode(ldisplay[count]);
 
 if (x-blankleft < 1) {
 color = "black";
@@ -336,6 +283,39 @@ color = "black";
 ccode = 0;
 }
 
+if (playerpos > 415 && playerpos < 420) {
+
+if (y == 3 && x > -playerpos+423) {
+color = "blue";
+}
+
+if (y == 4 && x > -playerpos+423) {
+color = toColor(gameboard[playerpos-32+x])
+}
+
+if (y == 5 && x > -playerpos+423) {
+color = "blue";
+}
+
+}
+
+if (playerpos < 395 && playerpos > 391) {
+
+if (y == 3 && x < -playerpos+396) {
+color = "blue";
+}
+
+if (y == 4 && x < -playerpos+396) {
+color = toColor(gameboard[playerpos+24+x])
+}
+
+if (y == 5 && x < -playerpos+396) {
+color = "blue";
+}
+
+
+}
+
 if (midiOut) {
 midiOut.send( [0x90, Number(String(9-y)+String(x)), true ? (ccode) : 0x00])
 }
@@ -346,6 +326,54 @@ y += 1;
 }
 
 
+}
+
+function toColor(id) {
+if (id == 0) {
+return "blue"
+}
+if (id == 3) {
+return "gray"
+}
+if (id == 4) {
+return "black"
+}
+if (id == 1) {
+return "lightgray"
+}
+if (id == 2) {
+return "white"
+}
+if (id == 5) {
+return "yellow"
+}
+if (id == 9) {
+return "pink"
+}
+}
+
+function toColorCode(id) {
+if (id == 0) {
+return 46;
+}
+if (id == 3) {
+return 0;
+}
+if (id == 4) {
+return 0;
+}
+if (id == 1) {
+return 71;
+}
+if (id == 2) {
+return 119;
+}
+if (id == 5) {
+return 13;
+}
+if (id == 9) {
+return 56;
+}
 }
 
 
