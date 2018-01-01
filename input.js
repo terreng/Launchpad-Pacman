@@ -117,14 +117,43 @@ function midiProc(event) {
   if ( cmd==8 || ((cmd==9)&&(velocity==0)) ) { // with MIDI, note on with velocity zero is the same as note off
     // note off
     //noteOff(b);
+	console.log("Off:"+noteNumber);
+	
+	if (noteNumber == 16) {
+	keys[37] = false;
+	}
+	
+	if (noteNumber == 18) {
+	keys[39] = false;
+	}
+	
+	if (noteNumber == 17) {
+	keys[40] = false;
+	}
+	
+	if (noteNumber == 27) {
+	keys[38] = false;
+	}
+	
   } else if (cmd == 9) {  // Note on
-    if ((noteNumber&0x0f)==8)
-      tick();
-    else {
-      var x = noteNumber & 0x0f;
-      var y = (noteNumber & 0xf0) >> 4;
-      flipXY( x, y );
-    }
+	console.log("On:"+noteNumber);
+	
+	if (noteNumber == 16) {
+	keys[38] = false; keys[40] = false; keys[37] = true; keys[39] = false;
+	}
+	
+	if (noteNumber == 18) {
+	keys[38] = false; keys[40] = false; keys[37] = false; keys[39] = true;
+	}
+	
+	if (noteNumber == 17) {
+	keys[38] = false; keys[40] = true; keys[37] = false; keys[39] = false;
+	}
+	
+	if (noteNumber == 27) {
+	keys[38] = true; keys[40] = false; keys[37] = false; keys[39] = false;
+	}
+	
   } else if (cmd == 11) { // Continuous Controller message
     switch (noteNumber) {
     }

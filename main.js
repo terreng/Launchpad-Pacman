@@ -1,5 +1,10 @@
 
 var mode = "locked";
+var mirroredge = true;
+var up = false;
+var down = false;
+var left = false;
+var right = false;
 var startgameboard = [
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,0,
@@ -86,33 +91,48 @@ setTimeout(function() {
 initialize();
 drawFrame();
 
+setInterval(function() {
+step();
+}, 150)
+
 }, 300);
 
 }
 
 
-document.onkeydown = checkKey;
+var keys = [];
+window.onkeyup = function(e) {keys[e.keyCode]=false;}
+window.onkeydown = function(e) {keys[38] = false; keys[40] = false; keys[37] = false; keys[39] = false; keys[e.keyCode]=true;}
 
-function checkKey(e) {
+//38 up
+//40 down
+//37 left
+//39 right
 
-    e = e || window.event;
+function movePlayer() {
 
-    if (e.keyCode == '38') {
-    moveUp();
-    }
-    else if (e.keyCode == '40') {
-    moveDown();
-    }
-    else if (e.keyCode == '37') {
-    moveLeft();
-    }
-    else if (e.keyCode == '39') {
-    moveRight();
-    }
+if (keys[38]) {
+moveUp();
+} else {
+if (keys[40]) {
+moveDown();
+} else {
+if (keys[37]) {
+moveLeft();
+} else {
+if (keys[39]) {
+moveRight();
+}}}}
 
-	drawFrame();
-	
 }
+
+
+function step() {
+movePlayer();
+drawFrame();
+}
+
+
 
 
 function moveRight() {
@@ -283,18 +303,23 @@ color = "black";
 ccode = 0;
 }
 
+if (mirroredge == true) {
+
 if (playerpos > 415 && playerpos < 420) {
 
 if (y == 3 && x > -playerpos+423) {
 color = "blue";
+ccode = 46;
 }
 
 if (y == 4 && x > -playerpos+423) {
 color = toColor(gameboard[playerpos-32+x])
+ccode = toColorCode(gameboard[playerpos-32+x])
 }
 
 if (y == 5 && x > -playerpos+423) {
 color = "blue";
+ccode = 46;
 }
 
 }
@@ -303,16 +328,21 @@ if (playerpos < 395 && playerpos > 391) {
 
 if (y == 3 && x < -playerpos+396) {
 color = "blue";
+ccode = 46;
 }
 
 if (y == 4 && x < -playerpos+396) {
 color = toColor(gameboard[playerpos+24+x])
+ccode = toColorCode(gameboard[playerpos+24+x])
 }
 
 if (y == 5 && x < -playerpos+396) {
 color = "blue";
+ccode = 46;
 }
 
+
+}
 
 }
 
