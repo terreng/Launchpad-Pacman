@@ -1,0 +1,33 @@
+body {
+margin: 4px;
+}
+
+.row {
+width: 420px;
+height: 15px;
+}
+.block {
+width: 15px;
+height: 15px;
+background-color: gray;
+float: left;
+}
+.l_block {
+width: 45px;
+height: 45px;
+border-radius: 12px;
+margin: 3px;
+background-color: lightgray;
+float:left;
+}
+#launchpad {
+margin-top: 10px;
+padding: 3px;
+background-color: black;
+width: calc(51px * 8);
+}
+.l_row {
+width: calc(51px * 8);
+height: 51px;
+background-color: black;
+}
