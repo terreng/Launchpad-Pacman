@@ -104,6 +104,12 @@ var blinkyonthing = 3;
 var pinkyonthing = 4;
 var clydeonthing = 4;
 var inkyonthing = 4;
+
+var blinkytargetpos = 0;
+var inkytargetpos = 0;
+var pinkytargetpos = 0;
+var clydetargetpos = 0;
+
 function gid(id) {
 return document.getElementById(id);
 }
@@ -136,6 +142,10 @@ gameboard[321] = 10;
 blinkypos = 321;
 gameboard[404] = 11;
 inkypos = 404;
+gameboard[406] = 13;
+pinkypos = 406;
+gameboard[407] = 12;
+clydepos = 407;
 points = 1;
 }
 
@@ -198,7 +208,7 @@ moveRight();
 
 
 function moveGhost() {
-
+blinkytargettile = playerpos;
 var adir = calcPath(blinkypos,playerpos,"blinky");
 if (blinkyskip == true || (adir == blinkydir && !(blinkypos > 391 && blinkypos < 395) && !(blinkypos > 416 && blinkypos < 420))) {
 blinkyskip = false;
@@ -236,7 +246,7 @@ transplayerpos = 576;
 if (playerdir == "down") {
 transplayerpos = 39;
 }
-
+inkytargetpos = transplayerpos;
 var adir = calcPath(inkypos,transplayerpos,"inky");
 if (adir == undefined) {
 adir = inkydir;
@@ -258,6 +268,122 @@ moveGhostDown("inky")
 inkydir = adir;
 } else {
 inkyskip = true;
+}
+
+
+
+var transplayerpos;
+var tries;
+ 
+if (playerdir == "up") {
+tries = 0;
+while (tries < 6) {
+tries += 1;
+transplayerpos = playerpos-(28*(6-tries))
+if (tries == 6) {
+transplayerpos = playerpos;
+}
+if (gameboard[transplayerpos] !== 0 && gameboard[transplayerpos] !== 4 && gameboard[transplayerpos] !== 9 && gameboard[transplayerpos] !== undefined) {
+break;
+}
+}
+}
+
+if (playerdir == "down") {
+tries = 0;
+while (tries < 6) {
+tries += 1;
+transplayerpos = playerpos+(28*(6-tries))
+if (tries == 6) {
+transplayerpos = playerpos;
+}
+if (gameboard[transplayerpos] !== 0 && gameboard[transplayerpos] !== 4 && gameboard[transplayerpos] !== 9 && gameboard[transplayerpos] !== undefined) {
+break;
+}
+}
+}
+
+if (playerdir == "left") {
+tries = 0;
+while (tries < 6) {
+tries += 1;
+transplayerpos = playerpos-(1*(6-tries))
+if (tries == 6) {
+transplayerpos = playerpos;
+}
+if (gameboard[transplayerpos] !== 0 && gameboard[transplayerpos] !== 4 && gameboard[transplayerpos] !== 9 && gameboard[transplayerpos] !== undefined) {
+break;
+}
+}
+}
+
+if (playerdir == "right") {
+tries = 0;
+while (tries < 6) {
+tries += 1;
+transplayerpos = playerpos+(1*(6-tries))
+if (tries == 6) {
+transplayerpos = playerpos;
+}
+if (gameboard[transplayerpos] !== 0 && gameboard[transplayerpos] !== 4 && gameboard[transplayerpos] !== 9 && gameboard[transplayerpos] !== undefined) {
+break;
+}
+}
+}
+ 
+pinkytargetpos = transplayerpos;
+var adir = calcPath(pinkypos,transplayerpos,"pinky");
+if (adir == undefined) {
+adir = pinkydir;
+}
+if (pinkyskip == true || (adir == pinkydir && !(pinkypos > 391 && pinkypos < 395) && !(pinkypos > 416 && pinkypos < 420))) {
+pinkyskip = false;
+if (adir == "left") {
+moveGhostLeft("pinky")
+}
+if (adir == "right") {
+moveGhostRight("pinky")
+}
+if (adir == "up") {
+moveGhostUp("pinky")
+}
+if (adir == "down") {
+moveGhostDown("pinky")
+}
+pinkydir = adir;
+} else {
+pinkyskip = true;
+}
+
+var transplayerpos;
+
+transplayerpos = playerpos;
+if (playerpos - clydepos > 7) {
+	
+}
+
+clydetargetpos = transplayerpos;
+var adir = calcPath(clydepos,transplayerpos,"clyde");
+if (adir == undefined) {
+adir = clydedir;
+}
+if (clydeskip == true || (adir == clydedir && !(clydepos > 391 && clydepos < 395) && !(clydepos > 416 && clydepos < 420))) {
+clydeskip = false;
+if (adir == "left") {
+moveGhostLeft("clyde")
+}
+if (adir == "right") {
+moveGhostRight("clyde")
+}
+if (adir == "up") {
+moveGhostUp("clyde")
+}
+if (adir == "down") {
+moveGhostDown("clyde")
+}
+clydedir = adir;
+} else {
+clydeskip = true;
 }
 
 }
@@ -298,6 +424,37 @@ gbwalls[start-28] = "S";
 }
 if (start == end) {
 return inkydir;
+}
+}
+
+
+if (ghost == "pinky") {
+if (pinkydir == "left") {
+gbwalls[start+1] = "S";
+}
+if (pinkydir == "right") {
+gbwalls[start-1] = "S";
+}
+if (pinkydir == "up") {
+gbwalls[start+28] = "S";
+}
+if (pinkydir == "down") {
+gbwalls[start-28] = "S";
+}
+}
+
+if (ghost == "clyde") {
+if (clydedir == "left") {
+gbwalls[start+1] = "S";
+}
+if (clydedir == "right") {
+gbwalls[start-1] = "S";
+}
+if (clydedir == "up") {
+gbwalls[start+28] = "S";
+}
+if (clydedir == "down") {
+gbwalls[start-28] = "S";
 }
 }
 
@@ -423,6 +580,47 @@ gameboard[inkypos] = 3;
 inkypos = 392;
 }}}
 
+if (ghost == "pinky") {
+if (gameboard[pinkypos+1] !== 0) {
+gameboard[pinkypos] = pinkyonthing;
+pinkyonthing = gameboard[pinkypos+1];
+if (pinkyonthing > 4 && pinkyonthing !== 9) {
+pinkyonthing = 3;
+}
+gameboard[pinkypos+1] = 13;
+pinkypos += 1;
+} else {
+if (pinkypos == 419) {
+gameboard[pinkypos] = pinkyonthing;
+pinkyonthing = gameboard[392];
+if (pinkyonthing > 4 && pinkyonthing !== 9) {
+pinkyonthing = 3;
+}
+gameboard[392] = 13;
+gameboard[pinkypos] = 3;
+pinkypos = 392;
+}}}
+
+if (ghost == "clyde") {
+if (gameboard[clydepos+1] !== 0) {
+gameboard[clydepos] = clydeonthing;
+clydeonthing = gameboard[clydepos+1];
+if (clydeonthing > 4 && clydeonthing !== 9) {
+clydeonthing = 3;
+}
+gameboard[clydepos+1] = 12;
+clydepos += 1;
+} else {
+if (clydepos == 419) {
+gameboard[clydepos] = clydeonthing;
+clydeonthing = gameboard[392];
+if (clydeonthing > 4 && clydeonthing !== 9) {
+clydeonthing = 3;
+}
+gameboard[392] = 12;
+gameboard[clydepos] = 3;
+clydepos = 392;
+}}}
 }
 
 function moveGhostLeft(ghost) {
@@ -467,6 +665,48 @@ gameboard[419] = 11;
 gameboard[inkypos] = 3;
 inkypos = 419;
 }}}
+
+if (ghost == "pinky") {
+if (gameboard[pinkypos-1] !== 0) {
+gameboard[pinkypos] = pinkyonthing;
+pinkyonthing = gameboard[pinkypos-1];
+if (pinkyonthing > 4 && pinkyonthing !== 9) {
+pinkyonthing = 3;
+}
+gameboard[pinkypos-1] = 13;
+pinkypos -= 1;
+} else {
+if (pinkypos == 392) {
+gameboard[pinkypos] = pinkyonthing;
+pinkyonthing = gameboard[419];
+if (pinkyonthing > 4 && pinkyonthing !== 9) {
+pinkyonthing = 3;
+}
+gameboard[419] = 13;
+gameboard[pinkypos] = 3;
+pinkypos = 419;
+}}}
+
+if (ghost == "clyde") {
+if (gameboard[clydepos-1] !== 0) {
+gameboard[clydepos] = clydeonthing;
+clydeonthing = gameboard[clydepos-1];
+if (clydeonthing > 4 && clydeonthing !== 9) {
+clydeonthing = 3;
+}
+gameboard[clydepos-1] = 12;
+clydepos -= 1;
+} else {
+if (clydepos == 392) {
+gameboard[clydepos] = clydeonthing;
+clydeonthing = gameboard[419];
+if (clydeonthing > 4 && clydeonthing !== 9) {
+clydeonthing = 3;
+}
+gameboard[419] = 12;
+gameboard[clydepos] = 3;
+clydepos = 419;
+}}}
 }
 
 function moveGhostUp(ghost) {
@@ -492,6 +732,27 @@ gameboard[inkypos-28] = 11;
 inkypos -= 28;
 }}
 
+if (ghost == "pinky") {
+if (gameboard[pinkypos-28] !== 0) {
+gameboard[pinkypos] = pinkyonthing;
+pinkyonthing = gameboard[pinkypos-28];
+if (pinkyonthing > 4 && pinkyonthing !== 9) {
+pinkyonthing = 3;
+}
+gameboard[pinkypos-28] = 13;
+pinkypos -= 28;
+}}
+
+if (ghost == "clyde") {
+if (gameboard[clydepos-28] !== 0) {
+gameboard[clydepos] = clydeonthing;
+clydeonthing = gameboard[clydepos-28];
+if (clydeonthing > 4 && clydeonthing !== 9) {
+clydeonthing = 3;
+}
+gameboard[clydepos-28] = 12;
+clydepos -= 28;
+}}
 }
 
 function moveGhostDown(ghost) {
@@ -517,6 +778,27 @@ gameboard[inkypos+28] = 11;
 inkypos += 28;
 }}
 
+if (ghost == "pinky") {
+if (gameboard[pinkypos+28] !== 0) {
+gameboard[pinkypos] = pinkyonthing;
+pinkyonthing = gameboard[pinkypos+28];
+if (pinkyonthing > 4 && pinkyonthing !== 9) {
+pinkyonthing = 3;
+}
+gameboard[pinkypos+28] = 13;
+pinkypos += 28;
+}}
+
+if (ghost == "clyde") {
+if (gameboard[clydepos+28] !== 0) {
+gameboard[clydepos] = clydeonthing;
+clydeonthing = gameboard[clydepos+28];
+if (clydeonthing > 4 && clydeonthing !== 9) {
+clydeonthing = 3;
+}
+gameboard[clydepos+28] = 12;
+clydepos += 28;
+}}
 }
 
 
@@ -602,6 +884,9 @@ var current = -1;
 for (f = 0; f < gameboard.length; f++) {
 current += 1;
 color = toColor(gameboard[current]);
+if (current == clydetargetpos) {
+	color = "lime";
+}
 gid("b_"+current).style.backgroundColor = color;
 }
 
