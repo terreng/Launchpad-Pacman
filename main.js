@@ -39,37 +39,37 @@ var startgameboard = [
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 ]
 var gameboardwalls = [
-1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,1,
-1,0,1,1,1,1,0,1,1,1,1,1,0,1,1,0,1,1,1,1,1,0,1,1,1,1,0,1,
-1,0,1,0,0,1,0,1,0,0,0,1,0,1,1,0,1,0,0,0,1,0,1,0,0,1,0,1,
-1,0,1,1,1,1,0,1,1,1,1,1,0,1,1,0,1,1,1,1,1,0,1,1,1,1,0,1,
-1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,
-1,0,1,1,1,1,0,1,1,0,1,1,1,1,1,1,1,1,0,1,1,0,1,1,1,1,0,1,
-1,0,1,1,1,1,0,1,1,0,1,1,1,1,1,1,1,1,0,1,1,0,1,1,1,1,0,1,
-1,0,0,0,0,0,0,1,1,0,0,0,0,1,1,0,0,0,0,1,1,0,0,0,0,0,0,1,
-1,1,1,1,1,1,0,1,1,1,1,1,0,1,1,0,1,1,1,1,1,0,1,1,1,1,1,1,
-0,0,0,0,0,1,0,1,1,1,1,1,0,1,1,0,1,1,1,1,1,0,1,0,0,0,0,0,
-0,0,0,0,0,1,0,1,1,0,0,0,0,0,0,0,0,0,0,1,1,0,1,0,0,0,0,0,
-0,0,0,0,0,1,0,1,1,0,1,1,1,0,0,1,1,1,0,1,1,0,1,0,0,0,0,0,
-1,1,1,1,1,1,0,1,1,0,1,0,0,0,0,0,0,1,0,1,1,0,1,1,1,1,1,1,
-0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,
-1,1,1,1,1,1,0,1,1,0,1,0,0,0,0,0,0,1,0,1,1,0,1,1,1,1,1,1,
-0,0,0,0,0,1,0,1,1,0,1,1,1,1,1,1,1,1,0,1,1,0,1,0,0,0,0,0,
-0,0,0,0,0,1,0,1,1,0,0,0,0,0,0,0,0,0,0,1,1,0,1,0,0,0,0,0,
-0,0,0,0,0,1,0,1,1,0,1,1,1,1,1,1,1,1,0,1,1,0,1,0,0,0,0,0,
-1,1,1,1,1,1,0,1,1,0,1,1,1,1,1,1,1,1,0,1,1,0,1,1,1,1,1,1,
-1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,1,
-1,0,1,1,1,1,0,1,1,1,1,1,0,1,1,0,1,1,1,1,1,0,1,1,1,1,0,1,
-1,0,1,1,1,1,0,1,1,1,1,1,0,1,1,0,1,1,1,1,1,0,1,1,1,1,0,1,
-1,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,1,
-1,1,1,0,1,1,0,1,1,0,1,1,1,1,1,1,1,1,0,1,1,0,1,1,0,1,1,1,
-1,1,1,0,1,1,0,1,1,0,1,1,1,1,1,1,1,1,0,1,1,0,1,1,0,1,1,1,
-1,0,0,0,0,0,0,1,1,0,0,0,0,1,1,0,0,0,0,1,1,0,0,0,0,0,0,1,
-1,0,1,1,1,1,1,1,1,1,1,1,0,1,1,0,1,1,1,1,1,1,1,1,1,1,0,1,
-1,0,1,1,1,1,1,1,1,1,1,1,0,1,1,0,1,1,1,1,1,1,1,1,1,1,0,1,
-1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,
-1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
+"S","S","S","S","S","S","S","S","S","S","S","S","S","S","S","S","S","S","S","S","S","S","S","S","S","S","S","S",
+"S",0,0,0,0,0,0,0,0,0,0,0,0,"S","S",0,0,0,0,0,0,0,0,0,0,0,0,"S",
+"S",0,"S","S","S","S",0,"S","S","S","S","S",0,"S","S",0,"S","S","S","S","S",0,"S","S","S","S",0,"S",
+"S",0,"S",0,0,"S",0,"S",0,0,0,"S",0,"S","S",0,"S",0,0,0,"S",0,"S",0,0,"S",0,"S",
+"S",0,"S","S","S","S",0,"S","S","S","S","S",0,"S","S",0,"S","S","S","S","S",0,"S","S","S","S",0,"S",
+"S",0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,"S",
+"S",0,"S","S","S","S",0,"S","S",0,"S","S","S","S","S","S","S","S",0,"S","S",0,"S","S","S","S",0,"S",
+"S",0,"S","S","S","S",0,"S","S",0,"S","S","S","S","S","S","S","S",0,"S","S",0,"S","S","S","S",0,"S",
+"S",0,0,0,0,0,0,"S","S",0,0,0,0,"S","S",0,0,0,0,"S","S",0,0,0,0,0,0,"S",
+"S","S","S","S","S","S",0,"S","S","S","S","S",0,"S","S",0,"S","S","S","S","S",0,"S","S","S","S","S","S",
+0,0,0,0,0,"S",0,"S","S","S","S","S",0,"S","S",0,"S","S","S","S","S",0,"S",0,0,0,0,0,
+0,0,0,0,0,"S",0,"S","S",0,0,0,0,0,0,0,0,0,0,"S","S",0,"S",0,0,0,0,0,
+0,0,0,0,0,"S",0,"S","S",0,"S","S","S",0,0,"S","S","S",0,"S","S",0,"S",0,0,0,0,0,
+"S","S","S","S","S","S",0,"S","S",0,"S",0,0,0,0,0,0,"S",0,"S","S",0,"S","S","S","S","S","S",
+0,0,0,0,0,0,0,0,0,0,"S",0,0,0,0,0,0,"S",0,0,0,0,0,0,0,0,0,0,
+"S","S","S","S","S","S",0,"S","S",0,"S",0,0,0,0,0,0,"S",0,"S","S",0,"S","S","S","S","S","S",
+0,0,0,0,0,"S",0,"S","S",0,"S","S","S","S","S","S","S","S",0,"S","S",0,"S",0,0,0,0,0,
+0,0,0,0,0,"S",0,"S","S",0,0,0,0,0,0,0,0,0,0,"S","S",0,"S",0,0,0,0,0,
+0,0,0,0,0,"S",0,"S","S",0,"S","S","S","S","S","S","S","S",0,"S","S",0,"S",0,0,0,0,0,
+"S","S","S","S","S","S",0,"S","S",0,"S","S","S","S","S","S","S","S",0,"S","S",0,"S","S","S","S","S","S",
+"S",0,0,0,0,0,0,0,0,0,0,0,0,"S","S",0,0,0,0,0,0,0,0,0,0,0,0,"S",
+"S",0,"S","S","S","S",0,"S","S","S","S","S",0,"S","S",0,"S","S","S","S","S",0,"S","S","S","S",0,"S",
+"S",0,"S","S","S","S",0,"S","S","S","S","S",0,"S","S",0,"S","S","S","S","S",0,"S","S","S","S",0,"S",
+"S",0,0,0,"S","S",0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,"S","S",0,0,0,"S",
+"S","S","S",0,"S","S",0,"S","S",0,"S","S","S","S","S","S","S","S",0,"S","S",0,"S","S",0,"S","S","S",
+"S","S","S",0,"S","S",0,"S","S",0,"S","S","S","S","S","S","S","S",0,"S","S",0,"S","S",0,"S","S","S",
+"S",0,0,0,0,0,0,"S","S",0,0,0,0,"S","S",0,0,0,0,"S","S",0,0,0,0,0,0,"S",
+"S",0,"S","S","S","S","S","S","S","S","S","S",0,"S","S",0,"S","S","S","S","S","S","S","S","S","S",0,"S",
+"S",0,"S","S","S","S","S","S","S","S","S","S",0,"S","S",0,"S","S","S","S","S","S","S","S","S","S",0,"S",
+"S",0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,"S",
+"S","S","S","S","S","S","S","S","S","S","S","S","S","S","S","S","S","S","S","S","S","S","S","S","S","S","S","S"
 ]
 var lpadconvert = [
 81,82,83,84,85,86,87,88,
@@ -91,6 +91,7 @@ var points = 0;
 var movelr = "right";
 var moveud = "down";
 var blinkyonthing = 3;
+var blinkydir = "left"
 var pinkyonthing = 3;
 var clydeonthing = 3;
 var inkyonthing = 3;
@@ -120,8 +121,8 @@ startNewGame();
 
 function startNewGame() {
 gameboard = [].concat(startgameboard);
-gameboard[233] = 5;
-playerpos = 233;
+gameboard[398] = 5;
+playerpos = 398;
 gameboard[321] = 10;
 blinkypos = 321;
 points = 1;
@@ -143,7 +144,7 @@ step();
 }, 150);
 setInterval(function() {
 ghoststep();
-}, 130);
+}, 170);
 
 
 
@@ -187,31 +188,188 @@ moveRight();
 
 function moveGhost() {
 
+var adir = calcPath(blinkypos,playerpos);
 
+if (adir == "left") {
+moveGhostLeft("blinky")
+}
+if (adir == "right") {
+moveGhostRight("blinky")
+}
+if (adir == "up") {
+moveGhostUp("blinky")
+}
+if (adir == "down") {
+moveGhostDown("blinky")
+}
 
+blinkydir = adir;
 
 }
 
 
+function calcPath(start,end) {
+var gbwalls = [].concat(gameboardwalls)
+gbwalls[start] = 1;
 
+if (blinkydir == "left") {
+gbwalls[start+1] = "S";
+}
+if (blinkydir == "right") {
+gbwalls[start-1] = "S";
+}
+if (blinkydir == "up") {
+gbwalls[start+28] = "S";
+}
+if (blinkydir == "down") {
+gbwalls[start-28] = "S";
+}
+
+current = 1;
+while (gbwalls[end] == 0 || current == 200) {
+current += 1;
+count = -1;
+for (i = 0; i < gbwalls.length; i++) {
+count += 1;
+if (gbwalls[count] == current-1) {
+if (gbwalls[count+1] == 0) {
+gbwalls[count+1] = current;
+}
+if (gbwalls[count-1] == 0) {
+gbwalls[count-1] = current;
+}
+if (gbwalls[count+28] == 0) {
+gbwalls[count+28] = current;
+}
+if (gbwalls[count-28] == 0) {
+gbwalls[count-28] = current;
+}
+if (count == 392 && gbwalls[419] == 0) {
+gbwalls[419] = current;
+}
+if (count == 419 && gbwalls[392] == 0) {
+gbwalls[392] = current;
+}
+}
+}
+}
+var currentpos = end;
+var currentnum = gbwalls[end];
+for (o = 0; o < current-1; o++) {
+currentnum -= 1;
+if (gbwalls[currentpos+1] == currentnum) {
+gbwalls[currentpos] = "X"
+currentpos = currentpos+1
+}
+if (gbwalls[currentpos-1] == currentnum) {
+gbwalls[currentpos] = "X"
+currentpos = currentpos-1
+}
+if (gbwalls[currentpos+28] == currentnum) {
+gbwalls[currentpos] = "X"
+currentpos = currentpos+28
+}
+if (gbwalls[currentpos-28] == currentnum) {
+gbwalls[currentpos] = "X"
+currentpos = currentpos-28
+}
+if (currentpos == 392 && gbwalls[419] == currentnum) {
+gbwalls[currentpos] = "X"
+currentpos = 419
+}
+if (currentpos == 419 && gbwalls[392] == currentnum) {
+gbwalls[currentpos] = "X"
+currentpos = 392
+}
+}
+if (start == 392 && gbwalls[419] == "X") {
+return "left";
+}
+if (start == 419 && gbwalls[392] == "X") {
+return "right";
+}
+if (gbwalls[start+1] == "X") {
+return "right";
+}
+if (gbwalls[start-1] == "X") {
+return "left";
+}
+if (gbwalls[start+28] == "X") {
+return "down";
+}
+if (gbwalls[start-28] == "X") {
+return "up";
+}
+}
 
 
 function moveGhostRight(ghost) {
 if (ghost == "blinky") {
-if (gameboard[blinkypos+1] !== 0 && gameboard[blinkypos+1] !== 9) {
+if (gameboard[blinkypos+1] !== 0) {
 gameboard[blinkypos] = blinkyonthing;
 blinkyonthing = gameboard[blinkypos+1];
+if (blinkyonthing > 4 && blinkyonthing !== 9) {
+blinkyonthing = 3;
+}
 gameboard[blinkypos+1] = 10;
 blinkypos += 1;
 } else {
 if (blinkypos == 419) {
-blinkypos[392] = 10;
-blinkypos[playerpos] = 3;
+gameboard[blinkypos] = blinkyonthing;
+blinkyonthing = gameboard[392];
+if (blinkyonthing > 4 && blinkyonthing !== 9) {
+blinkyonthing = 3;
+}
+gameboard[392] = 10;
+gameboard[blinkypos] = 3;
 blinkypos = 392;
+}}}}
+
+function moveGhostLeft(ghost) {
+if (ghost == "blinky") {
+if (gameboard[blinkypos-1] !== 0) {
+gameboard[blinkypos] = blinkyonthing;
+blinkyonthing = gameboard[blinkypos-1];
+if (blinkyonthing > 4 && blinkyonthing !== 9) {
+blinkyonthing = 3;
 }
+gameboard[blinkypos-1] = 10;
+blinkypos -= 1;
+} else {
+if (blinkypos == 392) {
+gameboard[blinkypos] = blinkyonthing;
+blinkyonthing = gameboard[419];
+if (blinkyonthing > 4 && blinkyonthing !== 9) {
+blinkyonthing = 3;
 }
+gameboard[419] = 10;
+gameboard[blinkypos] = 3;
+blinkypos = 419;
+}}}}
+
+function moveGhostUp(ghost) {
+if (ghost == "blinky") {
+if (gameboard[blinkypos-28] !== 0) {
+gameboard[blinkypos] = blinkyonthing;
+blinkyonthing = gameboard[blinkypos-28];
+if (blinkyonthing > 4 && blinkyonthing !== 9) {
+blinkyonthing = 3;
 }
+gameboard[blinkypos-28] = 10;
+blinkypos -= 28;
+}}}
+
+function moveGhostDown(ghost) {
+if (ghost == "blinky") {
+if (gameboard[blinkypos+28] !== 0) {
+gameboard[blinkypos] = blinkyonthing;
+blinkyonthing = gameboard[blinkypos+28];
+if (blinkyonthing > 4 && blinkyonthing !== 9) {
+blinkyonthing = 3;
 }
+gameboard[blinkypos+28] = 10;
+blinkypos += 28;
+}}}
 
 
 function step() {
