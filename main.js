@@ -5,6 +5,7 @@ var up = false;
 var down = false;
 var left = false;
 var right = false;
+var colorcache = [];
 var startgameboard = [
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,0,
@@ -237,6 +238,9 @@ transplayerpos = 39;
 }
 
 var adir = calcPath(inkypos,transplayerpos,"inky");
+if (adir == undefined) {
+adir = inkydir;
+}
 if (inkyskip == true || (adir == inkydir && !(inkypos > 391 && inkypos < 395) && !(inkypos > 416 && inkypos < 420))) {
 inkyskip = false;
 if (adir == "left") {
@@ -298,7 +302,7 @@ return inkydir;
 }
 
 current = 1;
-while (gbwalls[end] == 0 || current == 200) {
+while (gbwalls[end] == 0 || current == 500) {
 current += 1;
 count = -1;
 for (i = 0; i < gbwalls.length; i++) {
@@ -740,10 +744,13 @@ ccode = 46;
 
 }
 
+if (colorcache[x+"_"+y] !== color) {
+colorcache[x+"_"+y] = color;
 if (midiOut) {
 midiOut.send( [0x90, Number(String(9-y)+String(x)), true ? (ccode) : 0x00])
 }
 gid(y+"_"+x).style.backgroundColor = color;
+}
 
 }
 y += 1;
@@ -778,7 +785,7 @@ if (id == 10) {
 return "red"
 }
 if (id == 11) {
-return "lightblue"
+return "cyan"
 }
 if (id == 12) {
 return "orange"
