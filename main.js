@@ -817,6 +817,18 @@ return 13;
 if (id == 9) {
 return 56;
 }
+if (id == 10) {
+return 60;
+}
+if (id == 11) {
+return 41;
+}
+if (id == 12) {
+return 9;
+}
+if (id == 13) {
+return 4;
+}
 }
 
 
