@@ -358,9 +358,7 @@ pinkyskip = true;
 var transplayerpos;
 
 transplayerpos = playerpos;
-if (playerpos - clydepos > 7) {
-	
-}
+
 
 clydetargetpos = transplayerpos;
 var adir = calcPath(clydepos,transplayerpos,"clyde");
