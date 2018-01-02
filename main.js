@@ -82,6 +82,7 @@ var lpadconvert = [
 11,12,13,14,15,16,17,18,
 ]
 var playerpos = 0;
+var playerdir = "left";
 var blinkypos = 0;
 var pinkypos = 0;
 var clydepos = 0;
@@ -90,11 +91,18 @@ var gameboard = [];
 var points = 0;
 var movelr = "right";
 var moveud = "down";
-var blinkyonthing = 3;
 var blinkydir = "left"
-var pinkyonthing = 3;
-var clydeonthing = 3;
-var inkyonthing = 3;
+var blinkyskip = false;
+var inkydir = "left"
+var inkyskip = false;
+var clydedir = "left"
+var clydeskip = false;
+var pinkydir = "left"
+var pinkyskip = false;
+var blinkyonthing = 3;
+var pinkyonthing = 4;
+var clydeonthing = 4;
+var inkyonthing = 4;
 function gid(id) {
 return document.getElementById(id);
 }
@@ -125,6 +133,8 @@ gameboard[398] = 5;
 playerpos = 398;
 gameboard[321] = 10;
 blinkypos = 321;
+gameboard[404] = 11;
+inkypos = 404;
 points = 1;
 }
 
@@ -144,7 +154,7 @@ step();
 }, 150);
 setInterval(function() {
 ghoststep();
-}, 170);
+}, 165);
 
 
 
@@ -188,8 +198,9 @@ moveRight();
 
 function moveGhost() {
 
-var adir = calcPath(blinkypos,playerpos);
-
+var adir = calcPath(blinkypos,playerpos,"blinky");
+if (blinkyskip == true || (adir == blinkydir && !(blinkypos > 391 && blinkypos < 395) && !(blinkypos > 416 && blinkypos < 420))) {
+blinkyskip = false;
 if (adir == "left") {
 moveGhostLeft("blinky")
 }
@@ -202,16 +213,58 @@ moveGhostUp("blinky")
 if (adir == "down") {
 moveGhostDown("blinky")
 }
-
 blinkydir = adir;
+} else {
+blinkyskip = true;
+}
+
+
+var transplayerpos;
+if (playerdir == "left") {
+transplayerpos = 703;
+}
+
+if (playerdir == "right") {
+transplayerpos = 162;
+}
+
+if (playerdir == "up") {
+transplayerpos = 576;
+}
+
+if (playerdir == "down") {
+transplayerpos = 39;
+}
+
+var adir = calcPath(inkypos,transplayerpos,"inky");
+if (inkyskip == true || (adir == inkydir && !(inkypos > 391 && inkypos < 395) && !(inkypos > 416 && inkypos < 420))) {
+inkyskip = false;
+if (adir == "left") {
+moveGhostLeft("inky")
+}
+if (adir == "right") {
+moveGhostRight("inky")
+}
+if (adir == "up") {
+moveGhostUp("inky")
+}
+if (adir == "down") {
+moveGhostDown("inky")
+}
+inkydir = adir;
+} else {
+inkyskip = true;
+}
 
 }
 
 
-function calcPath(start,end) {
+function calcPath(start,end,ghost) {
+var end = end;
 var gbwalls = [].concat(gameboardwalls)
 gbwalls[start] = 1;
 
+if (ghost == "blinky") {
 if (blinkydir == "left") {
 gbwalls[start+1] = "S";
 }
@@ -223,6 +276,25 @@ gbwalls[start+28] = "S";
 }
 if (blinkydir == "down") {
 gbwalls[start-28] = "S";
+}
+}
+
+if (ghost == "inky") {
+if (inkydir == "left") {
+gbwalls[start+1] = "S";
+}
+if (inkydir == "right") {
+gbwalls[start-1] = "S";
+}
+if (inkydir == "up") {
+gbwalls[start+28] = "S";
+}
+if (inkydir == "down") {
+gbwalls[start-28] = "S";
+}
+if (start == end) {
+return inkydir;
+}
 }
 
 current = 1;
@@ -304,6 +376,7 @@ return "up";
 
 
 function moveGhostRight(ghost) {
+
 if (ghost == "blinky") {
 if (gameboard[blinkypos+1] !== 0) {
 gameboard[blinkypos] = blinkyonthing;
@@ -323,7 +396,30 @@ blinkyonthing = 3;
 gameboard[392] = 10;
 gameboard[blinkypos] = 3;
 blinkypos = 392;
-}}}}
+}}}
+
+if (ghost == "inky") {
+if (gameboard[inkypos+1] !== 0) {
+gameboard[inkypos] = inkyonthing;
+inkyonthing = gameboard[inkypos+1];
+if (inkyonthing > 4 && inkyonthing !== 9) {
+inkyonthing = 3;
+}
+gameboard[inkypos+1] = 11;
+inkypos += 1;
+} else {
+if (inkypos == 419) {
+gameboard[inkypos] = inkyonthing;
+inkyonthing = gameboard[392];
+if (inkyonthing > 4 && inkyonthing !== 9) {
+inkyonthing = 3;
+}
+gameboard[392] = 11;
+gameboard[inkypos] = 3;
+inkypos = 392;
+}}}
+
+}
 
 function moveGhostLeft(ghost) {
 if (ghost == "blinky") {
@@ -345,7 +441,29 @@ blinkyonthing = 3;
 gameboard[419] = 10;
 gameboard[blinkypos] = 3;
 blinkypos = 419;
-}}}}
+}}}
+
+if (ghost == "inky") {
+if (gameboard[inkypos-1] !== 0) {
+gameboard[inkypos] = inkyonthing;
+inkyonthing = gameboard[inkypos-1];
+if (inkyonthing > 4 && inkyonthing !== 9) {
+inkyonthing = 3;
+}
+gameboard[inkypos-1] = 11;
+inkypos -= 1;
+} else {
+if (inkypos == 392) {
+gameboard[inkypos] = inkyonthing;
+inkyonthing = gameboard[419];
+if (inkyonthing > 4 && inkyonthing !== 9) {
+inkyonthing = 3;
+}
+gameboard[419] = 11;
+gameboard[inkypos] = 3;
+inkypos = 419;
+}}}
+}
 
 function moveGhostUp(ghost) {
 if (ghost == "blinky") {
@@ -357,7 +475,20 @@ blinkyonthing = 3;
 }
 gameboard[blinkypos-28] = 10;
 blinkypos -= 28;
-}}}
+}}
+
+if (ghost == "inky") {
+if (gameboard[inkypos-28] !== 0) {
+gameboard[inkypos] = inkyonthing;
+inkyonthing = gameboard[inkypos-28];
+if (inkyonthing > 4 && inkyonthing !== 9) {
+inkyonthing = 3;
+}
+gameboard[inkypos-28] = 11;
+inkypos -= 28;
+}}
+
+}
 
 function moveGhostDown(ghost) {
 if (ghost == "blinky") {
@@ -369,7 +500,20 @@ blinkyonthing = 3;
 }
 gameboard[blinkypos+28] = 10;
 blinkypos += 28;
-}}}
+}}
+
+if (ghost == "inky") {
+if (gameboard[inkypos+28] !== 0) {
+gameboard[inkypos] = inkyonthing;
+inkyonthing = gameboard[inkypos+28];
+if (inkyonthing > 4 && inkyonthing !== 9) {
+inkyonthing = 3;
+}
+gameboard[inkypos+28] = 11;
+inkypos += 28;
+}}
+
+}
 
 
 function step() {
@@ -383,6 +527,7 @@ moveGhost();
 
 function moveRight() {
 movelr = "right";
+playerdir = "right";
 if (gameboard[playerpos+1] !== 0 && gameboard[playerpos+1] !== 9) {
 if (gameboard[playerpos+1] == 1) {
 points += 1
@@ -402,6 +547,7 @@ playerpos = 392;
 
 function moveLeft() {
 movelr = "left";
+playerdir = "left";
 if (gameboard[playerpos-1] !== 0 && gameboard[playerpos-1] !== 9) {
 if (gameboard[playerpos-1] == 1) {
 points += 1
@@ -421,6 +567,7 @@ playerpos = 419;
 
 function moveDown() {
 moveud = "down";
+playerdir = "down";
 if (gameboard[playerpos+28] !== 0 && gameboard[playerpos+28] !== 9) {
 if (gameboard[playerpos+28] == 1) {
 points += 1
@@ -434,6 +581,7 @@ playerpos += 28;
 
 function moveUp() {
 moveud = "up";
+playerdir = "up";
 if (gameboard[playerpos-28] !== 0 && gameboard[playerpos-28] !== 9) {
 if (gameboard[playerpos-28] == 1) {
 points += 1
