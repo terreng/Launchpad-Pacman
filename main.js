@@ -10,9 +10,12 @@ var right = false;
 var colorcache = [];
 var lives = 0;
 var scatter = 0;
-var scattertime = 1000;
+var scattertime = 100;
 var ghostblink = 0;
 var scattermode = false;
+var scatterbool = true;
+var newscatter = 0;
+var gl = [];
 var startgameboard = [
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,0,
@@ -122,6 +125,34 @@ var lpadconvert = [
 21,22,23,24,25,26,27,28,
 11,12,13,14,15,16,17,18,
 ]
+var gameovertext = [//36 pixels wide
+1,1,1,0,1,1,1,0,1,1,1,0,1,1,1,0,0,0,1,1,1,0,1,0,1,0,1,1,1,0,1,1,1,0,1,0,
+1,0,0,0,1,0,1,0,1,1,1,0,1,0,0,0,0,0,1,0,1,0,1,0,1,0,1,0,0,0,1,0,1,0,1,0,
+1,0,1,0,1,1,1,0,1,1,1,0,1,1,1,0,0,0,1,0,1,0,1,0,1,0,1,1,1,0,1,1,0,0,1,0,
+1,0,1,0,1,0,1,0,1,0,1,0,1,0,0,0,0,0,1,0,1,0,0,1,0,0,1,0,0,0,1,0,1,0,0,0,
+1,1,1,0,1,0,1,0,1,0,1,0,1,1,1,0,0,0,1,1,1,0,0,1,0,0,1,1,1,0,1,0,1,0,1,0,
+]
+var scoretext = [//24 pixels wide
+1,1,1,0,1,1,1,0,1,1,1,0,1,1,1,0,1,1,1,0,0,0,0,
+1,0,0,0,1,0,0,0,1,0,1,0,1,0,1,0,1,0,0,0,1,0,0,
+1,1,1,0,1,0,0,0,1,0,1,0,1,1,0,0,1,1,1,0,0,0,0,
+0,0,1,0,1,0,0,0,1,0,1,0,1,0,1,0,1,0,0,0,1,0,0,
+1,1,1,0,1,1,1,0,1,1,1,0,1,0,1,0,1,1,1,0,0,0,0,
+]
+var numberzero = [
+1,1,1,0,
+1,0,1,0,
+1,0,1,0,
+1,0,1,0,
+1,1,1,0,
+]
+var numberone = [
+1,1,0,0,
+0,1,0,0,
+0,1,0,0,
+0,1,0,0,
+1,1,1,0,
+]
 var pellets = [];
 var playerpos = 0;
 var playerdir = "left";
@@ -141,6 +172,11 @@ var clydedir = "left"
 var clydeskip = false;
 var pinkydir = "left"
 var pinkyskip = false;
+
+var blinkyalive = true;
+var inkyalive = true;
+var clydealive = true;
+var pinkyalive = true;
 
 var blinkytargetpos = 0;
 var inkytargetpos = 0;
@@ -186,39 +222,252 @@ gameboard[407] = 12;
 clydepos = 407;
 points = 1;
 lives = 3;
-updateLives();
+blinkyalive = true;
+inkyalive = true;
+clydealive = true;
+pinkyalive = true;
+}
+
+function gameOver() {
+for (a = 1; a < 9; a++) {
+for (i = 1; i < 9; i++) {
+midiOut.send( [0x90, Number(String(i)+String(a)), true ? (0) : 0x00])
+gid(i+"_"+a).style.backgroundColor = "black";
+}
+}
+var x = 9;
+var y = 7;
+
+var sain = setInterval(function() {
+x -= 1;
+drawGOFrame();
+if (x < -33) {
+clearInterval(sain);
+showScore();
+}
+},200)
+
+drawGOFrame()
+
+function drawGOFrame() {
+var cursorx = x;
+var cursory = y;
+for (var i = 0; i < gameovertext.length; i++) {
+if (cursorx > 8 || cursory > 8 || cursorx < 1 || cursory < 1) {
+	
+} else {
+if (gameovertext[i] == 1) {
+midiOut.send( [0x90, Number(String(cursory)+String(cursorx)), true ? (1) : 0x00])
+gid(String(9-Number(cursory))+"_"+cursorx).style.backgroundColor = "white";
+} else {
+midiOut.send( [0x90, Number(String(cursory)+String(cursorx)), true ? (0) : 0x00])
+gid(String(9-Number(cursory))+"_"+cursorx).style.backgroundColor = "black";
+}
+}
+cursorx += 1;
+if (cursorx > 36+x-1) {
+cursorx = x;
+cursory -= 1;
+}
+}
+}
+
+function showScore() {
+var x = 9;
+var y = 7;
+var sain = setInterval(function() {
+x -= 1;
+drawScoreFrame();
+if (x < -23-(String(points).length*4)) {
+clearInterval(sain);
+}
+},200)
+
+drawScoreFrame()
+
+function drawScoreFrame() {
+var cursorx = x;
+var cursory = y;
+for (var i = 0; i < scoretext.length; i++) {
+if (cursorx > 8 || cursory > 8 || cursorx < 1 || cursory < 1) {
+	
+} else {
+if (scoretext[i] == 1) {
+midiOut.send( [0x90, Number(String(cursory)+String(cursorx)), true ? (1) : 0x00])
+gid(String(9-Number(cursory))+"_"+cursorx).style.backgroundColor = "white";
+} else {
+midiOut.send( [0x90, Number(String(cursory)+String(cursorx)), true ? (0) : 0x00])
+gid(String(9-Number(cursory))+"_"+cursorx).style.backgroundColor = "black";
+}
+}
+cursorx += 1;
+if (cursorx > 23+x-1) {
+cursorx = x;
+cursory -= 1;
+}
+}
+
+
+
+cursorx = x+23;
+cursory = y;
+
+for (var i = 0; i < 20; i++) {
+if (cursorx > 8 || cursory > 8 || cursorx < 1 || cursory < 1) {
+	
+} else {
+if (numberzero[i] == 1) {
+midiOut.send( [0x90, Number(String(cursory)+String(cursorx)), true ? (1) : 0x00])
+gid(String(9-Number(cursory))+"_"+cursorx).style.backgroundColor = "white";
+} else {
+midiOut.send( [0x90, Number(String(cursory)+String(cursorx)), true ? (0) : 0x00])
+gid(String(9-Number(cursory))+"_"+cursorx).style.backgroundColor = "black";
+}
+}
+cursorx += 1;
+if (cursorx > 4+x+23-1) {
+cursorx = x+23;
+cursory -= 1;
+}
+}
+
+
+
+
+
+
+}
+}
+
+
+}
+
+function newRound() {
+checkLastSpot("blinky");
+checkLastSpot("inky");
+checkLastSpot("clyde");
+checkLastSpot("pinky");
+gameboard[playerpos] = 3;
+gameboard[657] = 5;
+playerpos = 657;
+gameboard[321] = 10;
+blinkypos = 321;
+gameboard[404] = 11;
+inkypos = 404;
+gameboard[406] = 13;
+pinkypos = 406;
+gameboard[407] = 12;
+clydepos = 407;
+blinkyalive = true;
+inkyalive = true;
+clydealive = true;
+pinkyalive = true;
+gameLoop();
 }
 
 function onLoaded() {
-setTimeout(function() {
+runNewGame();
+}
 
-
-
-
+function runNewGame() {
 initialize();
+gameLoop();
+}
+
+function pauseGame() {
+clearInterval(gl[0]);
+clearInterval(gl[1]);
+clearInterval(gl[2]);
+}
+
+function gameLoop() {
+setTimeout(function() {
 drawFrame();
-setInterval(function() {
+updateLives();
+gl[0] = setInterval(function() {
 drawFrame();
 gameVarsStep();
 }, 75*gspeed);
-setInterval(function() {
+gl[1] = setInterval(function() {
 step();
 }, 150*playerspeed*gspeed);
-setInterval(function() {
+gl[2] = setInterval(function() {
 ghoststep();
 }, 170*gspeed);
-
-
-
-
 }, 300);
+}
 
+function looseLife() {
+drawFrame();
+pauseGame();
+lives -= 1;
+updateLives();
+var tspeed = 300;
+setTimeout(function() {
+showPlayer();
+},tspeed*1)
+setTimeout(function() {
+showGhost();
+},tspeed*2)
+setTimeout(function() {
+showPlayer();
+},tspeed*3)
+setTimeout(function() {
+showGhost();
+},tspeed*4)
+setTimeout(function() {
+showPlayer();
+},tspeed*5)
+setTimeout(function() {
+lives -= 1;
+updateLives();
+if (lives > 0) {
+newRound();
+} else {
+gameOver();
+}
+},tspeed*7)
+
+function showPlayer() {
+gameboard[playerpos] = 5;
+lives += 1;
+drawFrame();
+updateLives();
+}
+
+function showGhost() {
+gameboard[blinkypos] = 10;
+gameboard[inkypos] = 11;
+gameboard[clydepos] = 12;
+gameboard[pinkypos] = 13;
+lives -= 1;
+drawFrame();
+updateLives();
+}
 }
 
 function gameVarsStep() {
 if (scatter > 0) {
 scatter -= 1;
 scattermode = true;
+if (scatter == 0) {
+if (!blinkyalive) {
+blinkyalive = true;
+blinkypos = 404;
+}
+if (!inkyalive) {
+inkyalive = true;
+inkypos = 405;
+}
+if (!clydealive) {
+clydealive = true;
+clydepos = 406;
+}
+if (!pinkyalive) {
+pinkyalive = true;
+pinkypos = 407;
+}
+}
 } else {
 scattermode = false;	
 }
@@ -258,11 +507,19 @@ moveRight();
 
 
 function moveGhost() {
+var cpback = false;
+if (newscatter > 0) {
+newscatter -= 1;
+cpback = true;
+}
+
+
+if (blinkyalive) {
 blinkytargettile = playerpos;
 if (scattermode) {
-var adir = calcPath(blinkypos,52,"blinky");
+var adir = calcPath(blinkypos,52,"blinky",cpback);
 } else {
-var adir = calcPath(blinkypos,playerpos,"blinky");
+var adir = calcPath(blinkypos,playerpos,"blinky",cpback);
 }
 if (adir == undefined) {
 adir = blinkydir;
@@ -285,8 +542,9 @@ blinkydir = adir;
 } else {
 blinkyskip = true;
 }
+}
 
-
+if (inkyalive) {
 var transplayerpos;
 if (playerdir == "left") {
 transplayerpos = 703;
@@ -305,9 +563,9 @@ transplayerpos = 39;
 }
 inkytargetpos = transplayerpos;
 if (scattermode) {
-var adir = calcPath(inkypos,836,"inky");
+var adir = calcPath(inkypos,836,"inky",cpback);
 } else {
-var adir = calcPath(inkypos,transplayerpos,"inky");
+var adir = calcPath(inkypos,transplayerpos,"inky",cpback);
 }
 if (adir == undefined) {
 adir = inkydir;
@@ -330,9 +588,10 @@ inkydir = adir;
 } else {
 inkyskip = true;
 }
+}
 
 
-
+if (pinkyalive) {
 var transplayerpos;
 var tries;
  
@@ -394,9 +653,9 @@ break;
  
 pinkytargetpos = transplayerpos;
 if (scattermode) {
-var adir = calcPath(pinkypos,31,"pinky");
+var adir = calcPath(pinkypos,31,"pinky",cpback);
 } else {
-var adir = calcPath(pinkypos,transplayerpos,"pinky");
+var adir = calcPath(pinkypos,transplayerpos,"pinky",cpback);
 }
 if (adir == undefined) {
 adir = pinkydir;
@@ -419,17 +678,18 @@ pinkydir = adir;
 } else {
 pinkyskip = true;
 }
+}
 
+if (clydealive) {
 var transplayerpos;
 
 transplayerpos = playerpos;
 
-
 clydetargetpos = transplayerpos;
 if (scattermode) {
-var adir = calcPath(clydepos,815,"clyde");
+var adir = calcPath(clydepos,815,"clyde",cpback);
 } else {
-var adir = calcPath(clydepos,transplayerpos,"clyde");
+var adir = calcPath(clydepos,transplayerpos,"clyde",cpback);
 }
 if (adir == undefined) {
 adir = clydedir;
@@ -453,11 +713,14 @@ clydedir = adir;
 clydeskip = true;
 }
 }
+}
 
 
-function calcPath(start,end,ghost) {
+function calcPath(start,end,ghost,noback) {
 var gbwalls = [].concat(gameboardwalls)
 gbwalls[start] = 1;
+
+if (noback !== true) {
 
 if (ghost == "blinky") {
 if (blinkydir == "left") {
@@ -530,6 +793,8 @@ gbwalls[start-28] = "S";
 if (start == end) {
 return clydedir;
 }
+}
+
 }
 
 current = 1;
@@ -672,6 +937,41 @@ gameboard[clydepos] = 3;
 }
 }
 
+function ghostIntersect(ghost) {
+console.log("GHOST INTERSECT: "+ghost);
+if (scattermode) {
+
+if (ghost == "blinky") {
+blinkyalive = false;
+}
+
+if (ghost == "inky") {
+inkyalive = false;
+}
+
+if (ghost == "pinky") {
+pinkyalive = false;
+}
+
+if (ghost == "clyde") {
+clydealive = false;
+}
+
+checkLastSpot(ghost);
+
+gameboard[playerpos] = 5;
+
+drawFrame();
+pauseGame();
+
+setTimeout(function() {
+gameLoop();
+},500)
+
+} else {
+looseLife();
+}
+}
 
 function moveGhostRight(ghost) {
 
@@ -837,12 +1137,56 @@ clydepos += 28;
 
 function step() {
 movePlayer();
+if (clydepos == playerpos) {
+ghostIntersect("clyde")
+}
+if (inkypos == playerpos) {
+ghostIntersect("inky")
+}
+if (blinkypos == playerpos) {
+ghostIntersect("blinky")
+}
+if (pinkypos == playerpos) {
+ghostIntersect("pinky")
+}
 }
 
 function ghoststep() {
+if (scattermode) {
+scatterbool = !scatterbool;
+if (scatterbool) {
 moveGhost();
 }
+} else {
+moveGhost();
+}
+if (clydepos == playerpos) {
+ghostIntersect("clyde")
+}
+if (inkypos == playerpos) {
+ghostIntersect("inky")
+}
+if (blinkypos == playerpos) {
+ghostIntersect("blinky")
+}
+if (pinkypos == playerpos) {
+ghostIntersect("pinky")
+}
+}
 
+function powerPellet() {
+scatter += scattertime;
+newscatter = 4;
+scatterbool = true;
+blinkyskip = true;
+inkyskip = true;
+clydeskip = true;
+pinkyskip = true;
+blinkydir = false;
+inkydir = false;
+clydedir = false;
+pinkydir = false;
+}
 
 function moveRight() {
 movelr = "right";
@@ -852,7 +1196,7 @@ if (gameboard[playerpos+1] == 1 || gameboard[playerpos+1] == 2) {
 points += 1
 pellets[playerpos+1] = 0;
 if (gameboard[playerpos+1] == 2) {
-scatter += scattertime;
+powerPellet();
 }
 }
 gameboard[playerpos+1] = 5;
@@ -876,7 +1220,7 @@ if (gameboard[playerpos-1] == 1 || gameboard[playerpos-1] == 2) {
 points += 1
 pellets[playerpos-1] = 0;
 if (gameboard[playerpos-1] == 2) {
-scatter += scattertime;
+powerPellet();
 }
 }
 gameboard[playerpos-1] = 5;
@@ -900,7 +1244,7 @@ if (gameboard[playerpos+28] == 1 || gameboard[playerpos+28] == 2) {
 points += 1
 pellets[playerpos+28] = 0;
 if (gameboard[playerpos+28] == 2) {
-scatter += scattertime;
+powerPellet();
 }
 }
 gameboard[playerpos+28] = 5;
@@ -914,11 +1258,11 @@ function moveUp() {
 moveud = "up";
 playerdir = "up";
 if (gameboard[playerpos-28] !== 0 && gameboard[playerpos-28] !== 9) {
-if (gameboard[playerpos-28] == 1 || gameboard[playerpos-28] == 1) {
+if (gameboard[playerpos-28] == 1 || gameboard[playerpos-28] == 2) {
 points += 1
 pellets[playerpos-28] = 0;
 if (gameboard[playerpos-28] == 2) {
-scatter += scattertime;
+powerPellet();
 }
 }
 gameboard[playerpos-28] = 5;
@@ -1252,4 +1596,21 @@ midiOut.send( [0x90, 19, true ? (13) : 0x00])
 midiOut.send( [0x90, 19, true ? (0) : 0x00])
 }
 }
+
+if (lives > 2) {
+gid("6_9").style.backgroundColor = "yellow";
+} else {
+gid("6_9").style.backgroundColor = "lightgray";
+}
+if (lives > 1) {
+gid("7_9").style.backgroundColor = "yellow";
+} else {
+gid("7_9").style.backgroundColor = "lightgray";
+}
+if (lives > 0) {
+gid("8_9").style.backgroundColor = "yellow";
+} else {
+gid("8_9").style.backgroundColor = "lightgray";
+}
+
 }

@@ -20,14 +20,21 @@ margin: 3px;
 background-color: lightgray;
 float:left;
 }
+.l_circle {
+background-color: lightgray;
+border-radius: 40px;
+width: 35px;
+height: 35px;
+margin: 8px;
+}
 #launchpad {
 margin-top: 10px;
 padding: 3px;
 background-color: black;
-width: calc(51px * 8);
+width: calc(51px * 9);
 }
 .l_row {
-width: calc(51px * 8);
+width: calc(51px * 9);
 height: 51px;
 background-color: black;
 }
