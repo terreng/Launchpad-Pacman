@@ -118,6 +118,7 @@ function midiProc(event) {
     // note off
     //noteOff(b);
 	console.log("Off:"+noteNumber);
+
 	
 	if (noteNumber == 16) {
 	keys[37] = false;
@@ -137,6 +138,10 @@ function midiProc(event) {
 	
   } else if (cmd == 9) {  // Note on
 	console.log("On:"+noteNumber);
+	
+	if (ingame == false) {
+		startNewGame();
+	}
 	
 	if (noteNumber == 16) {
 	keys[38] = false; keys[40] = false; keys[37] = true; keys[39] = false;

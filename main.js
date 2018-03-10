@@ -9,13 +9,16 @@ var left = false;
 var right = false;
 var colorcache = [];
 var lives = 0;
+var score = 0;
 var scatter = 0;
 var scattertime = 100;
 var ghostblink = 0;
 var scattermode = false;
 var scatterbool = true;
 var newscatter = 0;
+var ghostseaten = 0;
 var gl = [];
+var ingame = false;
 var startgameboard = [
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,0,
@@ -125,12 +128,12 @@ var lpadconvert = [
 21,22,23,24,25,26,27,28,
 11,12,13,14,15,16,17,18,
 ]
-var gameovertext = [//36 pixels wide
-1,1,1,0,1,1,1,0,1,1,1,0,1,1,1,0,0,0,1,1,1,0,1,0,1,0,1,1,1,0,1,1,1,0,1,0,
-1,0,0,0,1,0,1,0,1,1,1,0,1,0,0,0,0,0,1,0,1,0,1,0,1,0,1,0,0,0,1,0,1,0,1,0,
-1,0,1,0,1,1,1,0,1,1,1,0,1,1,1,0,0,0,1,0,1,0,1,0,1,0,1,1,1,0,1,1,0,0,1,0,
-1,0,1,0,1,0,1,0,1,0,1,0,1,0,0,0,0,0,1,0,1,0,0,1,0,0,1,0,0,0,1,0,1,0,0,0,
-1,1,1,0,1,0,1,0,1,0,1,0,1,1,1,0,0,0,1,1,1,0,0,1,0,0,1,1,1,0,1,0,1,0,1,0,
+var gameovertext = [//34 pixels wide
+1,1,1,0,1,1,1,0,1,1,1,0,1,1,1,0,0,0,1,1,1,0,1,0,1,0,1,1,1,0,1,1,1,0,
+1,0,0,0,1,0,1,0,1,1,1,0,1,0,0,0,0,0,1,0,1,0,1,0,1,0,1,0,0,0,1,0,1,0,
+1,0,1,0,1,1,1,0,1,1,1,0,1,1,1,0,0,0,1,0,1,0,1,0,1,0,1,1,1,0,1,1,0,0,
+1,0,1,0,1,0,1,0,1,0,1,0,1,0,0,0,0,0,1,0,1,0,0,1,0,0,1,0,0,0,1,0,1,0,
+1,1,1,0,1,0,1,0,1,0,1,0,1,1,1,0,0,0,1,1,1,0,0,1,0,0,1,1,1,0,1,0,1,0,
 ]
 var scoretext = [//24 pixels wide
 1,1,1,0,1,1,1,0,1,1,1,0,1,1,1,0,1,1,1,0,0,0,0,
@@ -151,6 +154,62 @@ var numberone = [
 0,1,0,0,
 0,1,0,0,
 0,1,0,0,
+1,1,1,0,
+]
+var numbertwo = [
+1,1,1,0,
+0,0,1,0,
+1,1,1,0,
+1,0,0,0,
+1,1,1,0,
+]
+var numberthree = [
+1,1,1,0,
+0,0,1,0,
+1,1,1,0,
+0,0,1,0,
+1,1,1,0,
+]
+var numberfour = [
+1,0,1,0,
+1,0,1,0,
+1,1,1,0,
+0,0,1,0,
+0,0,1,0,
+]
+var numberfive = [
+1,1,1,0,
+1,0,0,0,
+1,1,1,0,
+0,0,1,0,
+1,1,1,0,
+]
+var numbersix = [
+1,1,1,0,
+1,0,0,0,
+1,1,1,0,
+1,0,1,0,
+1,1,1,0,
+]
+var numberseven = [
+1,1,1,0,
+0,0,1,0,
+0,1,0,0,
+1,0,0,0,
+1,0,0,0,
+]
+var numbereight = [
+1,1,1,0,
+1,0,1,0,
+1,1,1,0,
+1,0,1,0,
+1,1,1,0,
+]
+var numbernine = [
+1,1,1,0,
+1,0,1,0,
+1,1,1,0,
+0,0,1,0,
 1,1,1,0,
 ]
 var pellets = [];
@@ -203,11 +262,10 @@ gid("row_"+count).innerHTML += "<div class='block' id='b_"+keepcount+"'></div>"
 
 }
 
-startNewGame();
-
 }
 
 function startNewGame() {
+ingame = true;
 gameboard = [].concat(startgameboard);
 pellets = [].concat(pelletsmap);
 gameboard[657] = 5;
@@ -220,12 +278,14 @@ gameboard[406] = 13;
 pinkypos = 406;
 gameboard[407] = 12;
 clydepos = 407;
-points = 1;
+points = 0;
+score = 0;
 lives = 3;
 blinkyalive = true;
 inkyalive = true;
 clydealive = true;
 pinkyalive = true;
+gameLoop();
 }
 
 function gameOver() {
@@ -241,7 +301,7 @@ var y = 7;
 var sain = setInterval(function() {
 x -= 1;
 drawGOFrame();
-if (x < -33) {
+if (x < -31) {
 clearInterval(sain);
 showScore();
 }
@@ -265,7 +325,7 @@ gid(String(9-Number(cursory))+"_"+cursorx).style.backgroundColor = "black";
 }
 }
 cursorx += 1;
-if (cursorx > 36+x-1) {
+if (cursorx > 34+x-1) {
 cursorx = x;
 cursory -= 1;
 }
@@ -278,8 +338,9 @@ var y = 7;
 var sain = setInterval(function() {
 x -= 1;
 drawScoreFrame();
-if (x < -23-(String(points).length*4)) {
+if (x < -23-(String(score).length*4)) {
 clearInterval(sain);
+beforeGameLoop();
 }
 },200)
 
@@ -308,15 +369,58 @@ cursory -= 1;
 }
 
 
+for (var n = 0; n < String(score).length; n++) {
+	
+var sarray = [];
+	
+if (String(score).charAt(n) == 0) {
+sarray = [].concat(numberzero)
+}
 
-cursorx = x+23;
+if (String(score).charAt(n) == 1) {
+sarray = [].concat(numberone)
+}
+
+if (String(score).charAt(n) == 2) {
+sarray = [].concat(numbertwo)
+}
+
+if (String(score).charAt(n) == 3) {
+sarray = [].concat(numberthree)
+}
+
+if (String(score).charAt(n) == 4) {
+sarray = [].concat(numberfour)
+}
+
+if (String(score).charAt(n) == 5) {
+sarray = [].concat(numberfive)
+}
+
+if (String(score).charAt(n) == 6) {
+sarray = [].concat(numbersix)
+}
+
+if (String(score).charAt(n) == 7) {
+sarray = [].concat(numberseven)
+}
+
+if (String(score).charAt(n) == 8) {
+sarray = [].concat(numbereight)
+}
+
+if (String(score).charAt(n) == 9) {
+sarray = [].concat(numbernine)
+}
+
+cursorx = x+23+(n*4);
 cursory = y;
 
 for (var i = 0; i < 20; i++) {
 if (cursorx > 8 || cursory > 8 || cursorx < 1 || cursory < 1) {
 	
 } else {
-if (numberzero[i] == 1) {
+if (sarray[i] == 1) {
 midiOut.send( [0x90, Number(String(cursory)+String(cursorx)), true ? (1) : 0x00])
 gid(String(9-Number(cursory))+"_"+cursorx).style.backgroundColor = "white";
 } else {
@@ -325,10 +429,12 @@ gid(String(9-Number(cursory))+"_"+cursorx).style.backgroundColor = "black";
 }
 }
 cursorx += 1;
-if (cursorx > 4+x+23-1) {
-cursorx = x+23;
+if (cursorx > 4+x+23+(n*4)-1) {
+cursorx = x+23+(n*4);
 cursory -= 1;
 }
+}
+
 }
 
 
@@ -366,12 +472,12 @@ gameLoop();
 }
 
 function onLoaded() {
-runNewGame();
+initialize();
+beforeGameLoop();
 }
 
-function runNewGame() {
-initialize();
-gameLoop();
+function beforeGameLoop() {
+ingame = false;
 }
 
 function pauseGame() {
@@ -382,6 +488,7 @@ clearInterval(gl[2]);
 
 function gameLoop() {
 setTimeout(function() {
+colorcache = [];
 drawFrame();
 updateLives();
 gl[0] = setInterval(function() {
@@ -469,7 +576,8 @@ pinkypos = 407;
 }
 }
 } else {
-scattermode = false;	
+scattermode = false;
+ghostseaten = 0;
 }
 }
 
@@ -940,6 +1048,21 @@ gameboard[clydepos] = 3;
 function ghostIntersect(ghost) {
 console.log("GHOST INTERSECT: "+ghost);
 if (scattermode) {
+	
+ghostseaten += 1;
+
+if (ghostseaten == 1) {
+score += 200;
+}
+if (ghostseaten == 1) {
+score += 400;
+}
+if (ghostseaten == 1) {
+score += 800;
+}
+if (ghostseaten == 1) {
+score += 1600;
+}
 
 if (ghost == "blinky") {
 blinkyalive = false;
@@ -1175,6 +1298,7 @@ ghostIntersect("pinky")
 }
 
 function powerPellet() {
+score += 40;
 scatter += scattertime;
 newscatter = 4;
 scatterbool = true;
@@ -1193,7 +1317,8 @@ movelr = "right";
 playerdir = "right";
 if (gameboard[playerpos+1] !== 0 && gameboard[playerpos+1] !== 9) {
 if (gameboard[playerpos+1] == 1 || gameboard[playerpos+1] == 2) {
-points += 1
+points += 1;
+score += 10;
 pellets[playerpos+1] = 0;
 if (gameboard[playerpos+1] == 2) {
 powerPellet();
@@ -1217,7 +1342,8 @@ movelr = "left";
 playerdir = "left";
 if (gameboard[playerpos-1] !== 0 && gameboard[playerpos-1] !== 9) {
 if (gameboard[playerpos-1] == 1 || gameboard[playerpos-1] == 2) {
-points += 1
+points += 1;
+score += 10;
 pellets[playerpos-1] = 0;
 if (gameboard[playerpos-1] == 2) {
 powerPellet();
@@ -1241,7 +1367,8 @@ moveud = "down";
 playerdir = "down";
 if (gameboard[playerpos+28] !== 0 && gameboard[playerpos+28] !== 9) {
 if (gameboard[playerpos+28] == 1 || gameboard[playerpos+28] == 2) {
-points += 1
+points += 1;
+score += 10;
 pellets[playerpos+28] = 0;
 if (gameboard[playerpos+28] == 2) {
 powerPellet();
@@ -1259,7 +1386,8 @@ moveud = "up";
 playerdir = "up";
 if (gameboard[playerpos-28] !== 0 && gameboard[playerpos-28] !== 9) {
 if (gameboard[playerpos-28] == 1 || gameboard[playerpos-28] == 2) {
-points += 1
+points += 1;
+score += 10;
 pellets[playerpos-28] = 0;
 if (gameboard[playerpos-28] == 2) {
 powerPellet();
@@ -1600,17 +1728,17 @@ midiOut.send( [0x90, 19, true ? (0) : 0x00])
 if (lives > 2) {
 gid("6_9").style.backgroundColor = "yellow";
 } else {
-gid("6_9").style.backgroundColor = "lightgray";
+gid("6_9").style.backgroundColor = "black";
 }
 if (lives > 1) {
 gid("7_9").style.backgroundColor = "yellow";
 } else {
-gid("7_9").style.backgroundColor = "lightgray";
+gid("7_9").style.backgroundColor = "black";
 }
 if (lives > 0) {
 gid("8_9").style.backgroundColor = "yellow";
 } else {
-gid("8_9").style.backgroundColor = "lightgray";
+gid("8_9").style.backgroundColor = "black";
 }
 
 }
