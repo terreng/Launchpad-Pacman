@@ -260,9 +260,12 @@ moveRight();
 function moveGhost() {
 blinkytargettile = playerpos;
 if (scattermode) {
-var adir = calcPath(blinkypos,53,"blinky");
+var adir = calcPath(blinkypos,52,"blinky");
 } else {
 var adir = calcPath(blinkypos,playerpos,"blinky");
+}
+if (adir == undefined) {
+adir = blinkydir;
 }
 if (blinkyskip == true || (adir == blinkydir && !(blinkypos > 391 && blinkypos < 395) && !(blinkypos > 416 && blinkypos < 420))) {
 blinkyskip = false;
@@ -302,7 +305,7 @@ transplayerpos = 39;
 }
 inkytargetpos = transplayerpos;
 if (scattermode) {
-var adir = calcPath(inkypos,837,"inky");
+var adir = calcPath(inkypos,836,"inky");
 } else {
 var adir = calcPath(inkypos,transplayerpos,"inky");
 }
@@ -391,7 +394,7 @@ break;
  
 pinkytargetpos = transplayerpos;
 if (scattermode) {
-var adir = calcPath(pinkypos,30,"pinky");
+var adir = calcPath(pinkypos,31,"pinky");
 } else {
 var adir = calcPath(pinkypos,transplayerpos,"pinky");
 }
@@ -424,7 +427,7 @@ transplayerpos = playerpos;
 
 clydetargetpos = transplayerpos;
 if (scattermode) {
-var adir = calcPath(clydepos,814,"clyde");
+var adir = calcPath(clydepos,815,"clyde");
 } else {
 var adir = calcPath(clydepos,transplayerpos,"clyde");
 }
