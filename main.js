@@ -212,6 +212,38 @@ var numbernine = [
 0,0,1,0,
 1,1,1,0,
 ]
+var pacmanframes = [
+[
+0,0,0,1,1,1,0,0,0,
+0,0,1,1,1,1,1,0,0,
+0,1,1,1,1,0,0,0,0,
+0,1,1,1,0,0,0,0,0,
+0,1,1,1,1,0,0,0,0,
+0,0,1,1,1,1,1,0,0,
+0,0,0,1,1,1,0,0,0,
+0,0,0,0,0,0,0,0,0,
+],
+[
+0,0,0,1,1,1,0,0,0,
+0,0,1,1,1,1,1,0,0,
+0,1,1,1,1,1,1,1,0,
+0,1,1,1,1,0,0,0,0,
+0,1,1,1,1,1,1,1,0,
+0,0,1,1,1,1,1,0,0,
+0,0,0,1,1,1,0,0,0,
+0,0,0,0,0,0,0,0,0,
+],
+[
+0,0,0,1,1,1,0,0,0,
+0,0,1,1,1,1,1,0,0,
+0,1,1,1,1,1,1,1,0,
+0,1,1,1,1,1,1,1,0,
+0,1,1,1,1,1,1,1,0,
+0,0,1,1,1,1,1,0,0,
+0,0,0,1,1,1,0,0,0,
+0,0,0,0,0,0,0,0,0,
+],
+]
 var pellets = [];
 var playerpos = 0;
 var playerdir = "left";
@@ -265,6 +297,7 @@ gid("row_"+count).innerHTML += "<div class='block' id='b_"+keepcount+"'></div>"
 }
 
 function startNewGame() {
+clearInterval(bgloop);
 ingame = true;
 gameboard = [].concat(startgameboard);
 pellets = [].concat(pelletsmap);
@@ -291,7 +324,9 @@ gameLoop();
 function gameOver() {
 for (a = 1; a < 9; a++) {
 for (i = 1; i < 9; i++) {
+if (midiOut !== null) {
 midiOut.send( [0x90, Number(String(i)+String(a)), true ? (0) : 0x00])
+}
 gid(i+"_"+a).style.backgroundColor = "black";
 }
 }
@@ -317,10 +352,14 @@ if (cursorx > 8 || cursory > 8 || cursorx < 1 || cursory < 1) {
 	
 } else {
 if (gameovertext[i] == 1) {
+if (midiOut !== null) {
 midiOut.send( [0x90, Number(String(cursory)+String(cursorx)), true ? (1) : 0x00])
+}
 gid(String(9-Number(cursory))+"_"+cursorx).style.backgroundColor = "white";
 } else {
+if (midiOut !== null) {
 midiOut.send( [0x90, Number(String(cursory)+String(cursorx)), true ? (0) : 0x00])
+}
 gid(String(9-Number(cursory))+"_"+cursorx).style.backgroundColor = "black";
 }
 }
@@ -354,10 +393,14 @@ if (cursorx > 8 || cursory > 8 || cursorx < 1 || cursory < 1) {
 	
 } else {
 if (scoretext[i] == 1) {
+if (midiOut !== null) {
 midiOut.send( [0x90, Number(String(cursory)+String(cursorx)), true ? (1) : 0x00])
+}
 gid(String(9-Number(cursory))+"_"+cursorx).style.backgroundColor = "white";
 } else {
+if (midiOut !== null) {
 midiOut.send( [0x90, Number(String(cursory)+String(cursorx)), true ? (0) : 0x00])
+}
 gid(String(9-Number(cursory))+"_"+cursorx).style.backgroundColor = "black";
 }
 }
@@ -421,10 +464,14 @@ if (cursorx > 8 || cursory > 8 || cursorx < 1 || cursory < 1) {
 	
 } else {
 if (sarray[i] == 1) {
+if (midiOut !== null) {
 midiOut.send( [0x90, Number(String(cursory)+String(cursorx)), true ? (1) : 0x00])
+}
 gid(String(9-Number(cursory))+"_"+cursorx).style.backgroundColor = "white";
 } else {
+if (midiOut !== null) {
 midiOut.send( [0x90, Number(String(cursory)+String(cursorx)), true ? (0) : 0x00])
+}
 gid(String(9-Number(cursory))+"_"+cursorx).style.backgroundColor = "black";
 }
 }
@@ -476,8 +523,73 @@ initialize();
 beforeGameLoop();
 }
 
+var bgloop;
+
 function beforeGameLoop() {
 ingame = false;
+var which = 0;
+var bx = -13-Math.round(Math.random()*15);
+var reverse = false;
+bgloop = setInterval(function() {
+	
+bx += 1;
+
+if (bx == 18) {
+reverse = !reverse;
+bx = -13-Math.round(Math.random()*15);
+}
+
+var frameorder = [0,1,2,1]
+
+var x = 1+bx;
+var y = 8;
+
+for (var i = 0; i < pacmanframes[frameorder[which]].length; i++) {
+
+if (x > 8 || y > 8 || x < 1 || y < 1) {
+	
+} else {
+if (reverse) {
+if (pacmanframes[frameorder[which]][i] == 1) {
+if (midiOut !== null) {
+midiOut.send( [0x90, Number(String(y)+String(9-x)), true ? (13) : 0x00])
+}
+gid(9-y+"_"+String(9-x)).style.backgroundColor = "yellow";
+} else {
+if (midiOut !== null) {
+midiOut.send( [0x90, Number(String(y)+String(9-x)), true ? (0) : 0x00])
+}
+gid(9-y+"_"+String(9-x)).style.backgroundColor = "black";
+}
+} else {
+if (pacmanframes[frameorder[which]][i] == 1) {
+if (midiOut !== null) {
+midiOut.send( [0x90, Number(String(y)+String(x)), true ? (13) : 0x00])
+}
+gid(9-y+"_"+x).style.backgroundColor = "yellow";
+} else {
+if (midiOut !== null) {
+midiOut.send( [0x90, Number(String(y)+String(x)), true ? (0) : 0x00])
+}
+gid(9-y+"_"+x).style.backgroundColor = "black";
+}	
+}
+}
+
+x += 1;
+if (x == 10+bx) {
+y -= 1;
+x = 1+bx;
+}
+
+}
+
+which += 1;
+if (which == 4) {
+which = 0;
+}
+
+},150)
 }
 
 function pauseGame() {
@@ -505,9 +617,8 @@ ghoststep();
 }
 
 function looseLife() {
-drawFrame();
+showGhost();
 pauseGame();
-lives -= 1;
 updateLives();
 var tspeed = 300;
 setTimeout(function() {
@@ -584,7 +695,7 @@ ghostseaten = 0;
 
 var keys = [];
 window.onkeyup = function(e) {keys[e.keyCode]=false;}
-window.onkeydown = function(e) {keys[38] = false; keys[40] = false; keys[37] = false; keys[39] = false; keys[e.keyCode]=true;}
+window.onkeydown = function(e) {keys[38] = false; keys[40] = false; keys[37] = false; keys[39] = false; keys[e.keyCode]=true; if(ingame == false) {startNewGame()}}
 
 //38 up
 //40 down
@@ -1066,18 +1177,22 @@ score += 1600;
 
 if (ghost == "blinky") {
 blinkyalive = false;
+blinkypos = -1;
 }
 
 if (ghost == "inky") {
 inkyalive = false;
+inkypos = -1;
 }
 
 if (ghost == "pinky") {
 pinkyalive = false;
+pinkypos = -1;
 }
 
 if (ghost == "clyde") {
 clydealive = false;
+clydepos = -1;
 }
 
 checkLastSpot(ghost);
