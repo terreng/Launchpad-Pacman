@@ -161,6 +161,22 @@ function midiProc(event) {
 	keys[38] = false;
 	}
 	
+	if (noteNumber == 106) {
+	keys[37] = false;
+	}
+	
+	if (noteNumber == 107) {
+	keys[39] = false;
+	}
+	
+	if (noteNumber == 105) {
+	keys[40] = false;
+	}
+	
+	if (noteNumber == 104) {
+	keys[38] = false;
+	}
+	
   } else if (cmd == 9 || cmd == 11) {  // Note on
 	console.log("On:"+noteNumber);
 	
@@ -197,6 +213,22 @@ function midiProc(event) {
 	}
 	
 	if (noteNumber == 22) {
+	keys[38] = true; keys[40] = false; keys[37] = false; keys[39] = false;
+	}
+	
+	if (noteNumber == 106) {
+	keys[38] = false; keys[40] = false; keys[37] = true; keys[39] = false;
+	}
+	
+	if (noteNumber == 107) {
+	keys[38] = false; keys[40] = false; keys[37] = false; keys[39] = true;
+	}
+	
+	if (noteNumber == 105) {
+	keys[38] = false; keys[40] = true; keys[37] = false; keys[39] = false;
+	}
+	
+	if (noteNumber == 104) {
 	keys[38] = true; keys[40] = false; keys[37] = false; keys[39] = false;
 	}
 	
