@@ -1,4 +1,3 @@
-
 var mode = "locked";
 var gspeed = 1;
 var playerspeed = 1;
@@ -10,15 +9,21 @@ var right = false;
 var colorcache = [];
 var lives = 0;
 var score = 0;
+var nlscore = 0;
 var scatter = 0;
 var scattertime = 100;
 var ghostblink = 0;
 var scattermode = false;
+var cornermode = true;
 var scatterbool = true;
 var newscatter = 0;
 var ghostseaten = 0;
+var invulnerable = false;
+var gameclock = 0;
+var newlifescore = 5000;
 var gl = [];
 var ingame = false;
+var curlevel = 1;
 var startgameboard = [
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,0,
@@ -141,6 +146,13 @@ var scoretext = [//24 pixels wide
 1,1,1,0,1,0,0,0,1,0,1,0,1,1,0,0,1,1,1,0,0,0,0,
 0,0,1,0,1,0,0,0,1,0,1,0,1,0,1,0,1,0,0,0,1,0,0,
 1,1,1,0,1,1,1,0,1,1,1,0,1,0,1,0,1,1,1,0,0,0,0,
+]
+var leveltext = [//20 pixels wide
+1,0,0,0,1,1,1,0,1,0,1,0,1,1,1,0,1,0,0,0,
+1,0,0,0,1,0,0,0,1,0,1,0,1,0,0,0,1,0,0,0,
+1,0,0,0,1,1,1,0,1,0,1,0,1,1,1,0,1,0,0,0,
+1,0,0,0,1,0,0,0,0,1,0,0,1,0,0,0,1,0,0,0,
+1,1,1,0,1,1,1,0,0,1,0,0,1,1,1,0,1,1,1,0,
 ]
 var numberzero = [
 1,1,1,0,
@@ -314,6 +326,32 @@ clydepos = 407;
 points = 0;
 score = 0;
 lives = 3;
+curlevel = 1;
+gameclock = 0;
+blinkyalive = true;
+inkyalive = true;
+clydealive = true;
+pinkyalive = true;
+gameLoop();
+}
+
+function startNewLevel() {
+clearInterval(bgloop);
+ingame = true;
+gameboard = [].concat(startgameboard);
+pellets = [].concat(pelletsmap);
+gameboard[657] = 5;
+playerpos = 657;
+gameboard[321] = 10;
+blinkypos = 321;
+gameboard[404] = 11;
+inkypos = 404;
+gameboard[406] = 13;
+pinkypos = 406;
+gameboard[407] = 12;
+clydepos = 407;
+points = 0;
+gameclock = 0;
 blinkyalive = true;
 inkyalive = true;
 clydealive = true;
@@ -511,6 +549,7 @@ gameboard[406] = 13;
 pinkypos = 406;
 gameboard[407] = 12;
 clydepos = 407;
+gameclock = 0;
 blinkyalive = true;
 inkyalive = true;
 clydealive = true;
@@ -528,7 +567,7 @@ var bgloop;
 function beforeGameLoop() {
 ingame = false;
 var which = 0;
-var bx = -13-Math.round(Math.random()*15);
+var bx = -13-Math.round(Math.random()*45);
 var reverse = false;
 bgloop = setInterval(function() {
 	
@@ -536,7 +575,7 @@ bx += 1;
 
 if (bx == 18) {
 reverse = !reverse;
-bx = -13-Math.round(Math.random()*15);
+bx = -13-Math.round(Math.random()*45);
 }
 
 var frameorder = [0,1,2,1]
@@ -665,6 +704,61 @@ updateLives();
 }
 
 function gameVarsStep() {
+gameclock += 1;
+if (gameclock == 1) {
+cornermode = true;
+}
+if (curlevel == 1) {
+if (gameclock == 135) {
+cornermode = false;
+}
+if (gameclock == 405) {
+cornermode = true;
+}
+if (gameclock == 520) {
+cornermode = false;
+}
+if (gameclock == 810) {
+cornermode = true;
+}
+if (gameclock == 945) {
+cornermode = false;
+}
+}
+if (curlevel > 1 && curlevel < 4) {
+if (gameclock == 100) {
+cornermode = false;
+}
+if (gameclock == 400) {
+cornermode = true;
+}
+if (gameclock == 500) {
+cornermode = false;
+}
+if (gameclock == 800) {
+cornermode = true;
+}
+if (gameclock == 900) {
+cornermode = false;
+}
+}
+if (curlevel > 3) {
+if (gameclock == 50) {
+cornermode = false;
+}
+if (gameclock == 450) {
+cornermode = true;
+}
+if (gameclock == 500) {
+cornermode = false;
+}
+if (gameclock == 900) {
+cornermode = true;
+}
+if (gameclock == 950) {
+cornermode = false;
+}
+}
 if (scatter > 0) {
 scatter -= 1;
 scattermode = true;
@@ -735,7 +829,7 @@ cpback = true;
 
 if (blinkyalive) {
 blinkytargettile = playerpos;
-if (scattermode) {
+if (scattermode || cornermode) {
 var adir = calcPath(blinkypos,52,"blinky",cpback);
 } else {
 var adir = calcPath(blinkypos,playerpos,"blinky",cpback);
@@ -781,7 +875,7 @@ if (playerdir == "down") {
 transplayerpos = 39;
 }
 inkytargetpos = transplayerpos;
-if (scattermode) {
+if (scattermode || cornermode) {
 var adir = calcPath(inkypos,836,"inky",cpback);
 } else {
 var adir = calcPath(inkypos,transplayerpos,"inky",cpback);
@@ -871,7 +965,7 @@ break;
 }
  
 pinkytargetpos = transplayerpos;
-if (scattermode) {
+if (scattermode || cornermode) {
 var adir = calcPath(pinkypos,31,"pinky",cpback);
 } else {
 var adir = calcPath(pinkypos,transplayerpos,"pinky",cpback);
@@ -905,7 +999,7 @@ var transplayerpos;
 transplayerpos = playerpos;
 
 clydetargetpos = transplayerpos;
-if (scattermode) {
+if (scattermode || cornermode) {
 var adir = calcPath(clydepos,815,"clyde",cpback);
 } else {
 var adir = calcPath(clydepos,transplayerpos,"clyde",cpback);
@@ -1207,7 +1301,9 @@ gameLoop();
 },500)
 
 } else {
+if (!invulnerable) {
 looseLife();
+}
 }
 }
 
@@ -1431,9 +1527,10 @@ function moveRight() {
 movelr = "right";
 playerdir = "right";
 if (gameboard[playerpos+1] !== 0 && gameboard[playerpos+1] !== 9) {
-if (gameboard[playerpos+1] == 1 || gameboard[playerpos+1] == 2) {
+if (pellets[playerpos+1] == 1 || pellets[playerpos+1] == 2) {
 points += 1;
 score += 10;
+checkPoints();
 pellets[playerpos+1] = 0;
 if (gameboard[playerpos+1] == 2) {
 powerPellet();
@@ -1456,9 +1553,10 @@ function moveLeft() {
 movelr = "left";
 playerdir = "left";
 if (gameboard[playerpos-1] !== 0 && gameboard[playerpos-1] !== 9) {
-if (gameboard[playerpos-1] == 1 || gameboard[playerpos-1] == 2) {
+if (pellets[playerpos-1] == 1 || pellets[playerpos-1] == 2) {
 points += 1;
 score += 10;
+checkPoints();
 pellets[playerpos-1] = 0;
 if (gameboard[playerpos-1] == 2) {
 powerPellet();
@@ -1481,9 +1579,10 @@ function moveDown() {
 moveud = "down";
 playerdir = "down";
 if (gameboard[playerpos+28] !== 0 && gameboard[playerpos+28] !== 9) {
-if (gameboard[playerpos+28] == 1 || gameboard[playerpos+28] == 2) {
+if (pellets[playerpos+28] == 1 || pellets[playerpos+28] == 2) {
 points += 1;
 score += 10;
+checkPoints();
 pellets[playerpos+28] = 0;
 if (gameboard[playerpos+28] == 2) {
 powerPellet();
@@ -1500,9 +1599,10 @@ function moveUp() {
 moveud = "up";
 playerdir = "up";
 if (gameboard[playerpos-28] !== 0 && gameboard[playerpos-28] !== 9) {
-if (gameboard[playerpos-28] == 1 || gameboard[playerpos-28] == 2) {
+if (pellets[playerpos-28] == 1 || pellets[playerpos-28] == 2) {
 points += 1;
 score += 10;
+checkPoints();
 pellets[playerpos-28] = 0;
 if (gameboard[playerpos-28] == 2) {
 powerPellet();
@@ -1513,6 +1613,174 @@ gameboard[playerpos] = 3;
 playerpos -= 28;
 }
 
+}
+
+function checkPoints() {
+if (points == 244) {
+
+pauseGame();
+
+setTimeout(function() {
+drawFrame();
+},1)
+
+setTimeout(function() {
+	
+var newlives = 1;
+
+while (score > nlscore+newlifescore) {
+nlscore += newlifescore;
+newlives += 1;
+}
+	
+lives += newlives;
+updateLives();
+var tspeed = 400;
+setTimeout(function() {
+lives -= newlives;
+updateLives();
+},tspeed*1)
+setTimeout(function() {
+lives += newlives;
+updateLives();
+},tspeed*2)
+setTimeout(function() {
+lives -= newlives;
+updateLives();
+},tspeed*3)
+setTimeout(function() {
+lives += newlives;
+updateLives();
+},tspeed*4)
+
+curlevel += 1;
+
+for (a = 1; a < 9; a++) {
+for (i = 1; i < 9; i++) {
+if (midiOut !== null) {
+midiOut.send( [0x90, Number(String(i)+String(a)), true ? (0) : 0x00])
+}
+gid(i+"_"+a).style.backgroundColor = "black";
+}
+}
+
+var x = 9;
+var y = 7;
+var sain = setInterval(function() {
+x -= 1;
+drawLevelFrame();
+if (x < -22-(String(curlevel).length*4)) {
+clearInterval(sain);
+startNewLevel();
+}
+},200)
+
+drawLevelFrame()
+
+function drawLevelFrame() {
+var cursorx = x;
+var cursory = y;
+for (var i = 0; i < leveltext.length; i++) {
+if (cursorx > 8 || cursory > 8 || cursorx < 1 || cursory < 1) {
+	
+} else {
+if (leveltext[i] == 1) {
+if (midiOut !== null) {
+midiOut.send( [0x90, Number(String(cursory)+String(cursorx)), true ? (1) : 0x00])
+}
+gid(String(9-Number(cursory))+"_"+cursorx).style.backgroundColor = "white";
+} else {
+if (midiOut !== null) {
+midiOut.send( [0x90, Number(String(cursory)+String(cursorx)), true ? (0) : 0x00])
+}
+gid(String(9-Number(cursory))+"_"+cursorx).style.backgroundColor = "black";
+}
+}
+cursorx += 1;
+if (cursorx > 20+x-1) {
+cursorx = x;
+cursory -= 1;
+}
+}
+
+
+for (var n = 0; n < String(curlevel).length; n++) {
+	
+var sarray = [];
+	
+if (String(curlevel).charAt(n) == 0) {
+sarray = [].concat(numberzero)
+}
+
+if (String(curlevel).charAt(n) == 1) {
+sarray = [].concat(numberone)
+}
+
+if (String(curlevel).charAt(n) == 2) {
+sarray = [].concat(numbertwo)
+}
+
+if (String(curlevel).charAt(n) == 3) {
+sarray = [].concat(numberthree)
+}
+
+if (String(curlevel).charAt(n) == 4) {
+sarray = [].concat(numberfour)
+}
+
+if (String(curlevel).charAt(n) == 5) {
+sarray = [].concat(numberfive)
+}
+
+if (String(curlevel).charAt(n) == 6) {
+sarray = [].concat(numbersix)
+}
+
+if (String(curlevel).charAt(n) == 7) {
+sarray = [].concat(numberseven)
+}
+
+if (String(curlevel).charAt(n) == 8) {
+sarray = [].concat(numbereight)
+}
+
+if (String(curlevel).charAt(n) == 9) {
+sarray = [].concat(numbernine)
+}
+
+cursorx = x+22+(n*4);
+cursory = y;
+
+for (var i = 0; i < 20; i++) {
+if (cursorx > 8 || cursory > 8 || cursorx < 1 || cursory < 1) {
+	
+} else {
+if (sarray[i] == 1) {
+if (midiOut !== null) {
+midiOut.send( [0x90, Number(String(cursory)+String(cursorx)), true ? (1) : 0x00])
+}
+gid(String(9-Number(cursory))+"_"+cursorx).style.backgroundColor = "white";
+} else {
+if (midiOut !== null) {
+midiOut.send( [0x90, Number(String(cursory)+String(cursorx)), true ? (0) : 0x00])
+}
+gid(String(9-Number(cursory))+"_"+cursorx).style.backgroundColor = "black";
+}
+}
+cursorx += 1;
+if (cursorx > 4+x+22+(n*4)-1) {
+cursorx = x+22+(n*4);
+cursory -= 1;
+}
+}
+
+}
+
+}
+
+},150)
+
+}
 }
 
 function drawFrame() {
@@ -1823,6 +2091,31 @@ return 57;
 
 function updateLives() {
 if (midiOut) {
+if (lives > 7) {
+midiOut.send( [0x90, 89, true ? (13) : 0x00])
+} else {
+midiOut.send( [0x90, 89, true ? (0) : 0x00])
+}
+if (lives > 6) {
+midiOut.send( [0x90, 79, true ? (13) : 0x00])
+} else {
+midiOut.send( [0x90, 79, true ? (0) : 0x00])
+}
+if (lives > 5) {
+midiOut.send( [0x90, 69, true ? (13) : 0x00])
+} else {
+midiOut.send( [0x90, 69, true ? (0) : 0x00])
+}
+if (lives > 4) {
+midiOut.send( [0x90, 59, true ? (13) : 0x00])
+} else {
+midiOut.send( [0x90, 59, true ? (0) : 0x00])
+}
+if (lives > 3) {
+midiOut.send( [0x90, 49, true ? (13) : 0x00])
+} else {
+midiOut.send( [0x90, 49, true ? (0) : 0x00])
+}
 if (lives > 2) {
 midiOut.send( [0x90, 39, true ? (13) : 0x00])
 } else {
@@ -1840,6 +2133,31 @@ midiOut.send( [0x90, 19, true ? (0) : 0x00])
 }
 }
 
+if (lives > 7) {
+gid("1_9").style.backgroundColor = "yellow";
+} else {
+gid("1_9").style.backgroundColor = "black";
+}
+if (lives > 6) {
+gid("2_9").style.backgroundColor = "yellow";
+} else {
+gid("2_9").style.backgroundColor = "black";
+}
+if (lives > 5) {
+gid("3_9").style.backgroundColor = "yellow";
+} else {
+gid("3_9").style.backgroundColor = "black";
+}
+if (lives > 4) {
+gid("4_9").style.backgroundColor = "yellow";
+} else {
+gid("4_9").style.backgroundColor = "black";
+}
+if (lives > 3) {
+gid("5_9").style.backgroundColor = "yellow";
+} else {
+gid("5_9").style.backgroundColor = "black";
+}
 if (lives > 2) {
 gid("6_9").style.backgroundColor = "yellow";
 } else {

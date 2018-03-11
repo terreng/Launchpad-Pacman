@@ -88,6 +88,15 @@ function onMIDIInit( midi ) {
   
 	getout = midiOut;
 	
+
+for (a = 1; a < 10; a++) {
+for (i = 1; i < 9; i++) {
+
+midiOut.send( [0x90, Number(String(i)+String(a)), true ? (0) : 0x00])
+}
+}
+
+	
 	midiOut.send( [0xB0,0x00,0x00] ); // Reset Launchpad
 	midiOut.send( [0xB0,0x00,0x01] ); // Select XY mode
 
